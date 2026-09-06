@@ -37,6 +37,7 @@ PACMAN_PACKAGES=(
     bluez              # bluetoothd; services/Bluetooth.qml talks to it over D-Bus
     bluez-utils        # bluetoothctl (CLI), bluetuith's backend
     waypaper           # wallpaper picker with thumbnail previews, SUPER+w
+    matugen            # wallpaper -> Material You palette, Linux Rising dynamic theming
 )
 
 AUR_PACKAGES=(

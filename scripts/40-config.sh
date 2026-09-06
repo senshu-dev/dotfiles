@@ -18,4 +18,9 @@ setup_config() {
     mkdir -p "$HOME/.config"
     cp -r "$config_dir/." "$HOME/.config/"
     ok ".config installed"
+
+    info "Building themegen"
+    mkdir -p "$HOME/.local/bin"
+    (cd "$HOME/.config/hypr/scripts/themegen" && go build -o "$HOME/.local/bin/themegen" -trimpath .)
+    ok "themegen built to ~/.local/bin/themegen"
 }

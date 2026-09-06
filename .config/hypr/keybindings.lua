@@ -8,16 +8,19 @@ hl.bind(mainMod .. " + v",        hl.dsp.exec_cmd("qs ipc call clipboard toggle"
 hl.bind(mainMod .. " + backspace",        hl.dsp.exec_cmd(launchPrefix .. programs.terminal))
 hl.bind(mainMod .. " + t",        hl.dsp.exec_cmd("qs ipc call thememenu toggle"))
 hl.bind(mainMod .. " + grave",    hl.dsp.exec_cmd("qs ipc call topbar toggle"))
+hl.bind(mainMod .. " + n",        hl.dsp.exec_cmd("qs ipc call panel toggle"))
 hl.bind("PRINT", hl.dsp.exec_cmd('grim -g "$(slurp)" - | tee ~/screenshot_$(date +%Y%m%d_%H%M%S).png | wl-copy'))
 hl.bind(mainMod .. " + space",    hl.dsp.exec_cmd(launchPrefix .. programs.menu))
 hl.bind("CTRL + SHIFT + ESCAPE",        hl.dsp.exec_cmd(launchPrefix .. programs.terminal .. " -e btop"))
 hl.bind(mainMod .. " + s",        hl.dsp.exec_cmd('grim -g "$(slurp)" - | tee ~/screenshot_$(date +%Y%m%d_%H%M%S).png | wl-copy'))
 hl.bind(mainMod .. " + e",        hl.dsp.exec_cmd(launchPrefix .. programs.fileManager))
 hl.bind(mainMod .. " + escape",   hl.dsp.exec_cmd("hyprctl reload"))
--- Wallpaper picker with thumbnail previews over the local dharmx/walls
--- mirror (~/walls, see scripts/60-extras.sh's `wallpapers`
--- extra); monitor targeting happens inside waypaper itself.
-hl.bind(mainMod .. " + w",        hl.dsp.exec_cmd(launchPrefix .. programs.wallpaperPicker))
+-- Wallpaper & Theme window: browse ~/walls with a live theme preview,
+-- Apply commits both the wallpaper and the matugen-derived theme
+-- together. Replaces the old direct waypaper launch (waypaper itself
+-- stays installed but nothing launches it anymore — see the design
+-- spec's Non-goals).
+hl.bind(mainMod .. " + w",        hl.dsp.exec_cmd("qs ipc call wallpapertheme toggle"))
 
 hl.bind(mainMod .. " + c",                hl.dsp.window.close())
 hl.bind(mainMod .. " + q",                hl.dsp.window.close())

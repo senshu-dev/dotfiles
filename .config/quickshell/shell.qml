@@ -20,13 +20,25 @@ ShellRoot {
 
     AppMenu {}
 
-    ThemeMenu {}
+    ThemeToggle {}
+
+    WallpaperTheme {}
 
     PowerMenu {}
 
     ClipboardMenu {}
 
-    TopBar {}
+    TopBar {
+        id: topBar
+        panelsOpen: panels.open
+    }
+
+    Panels { id: panels }
+
+    Connections {
+        target: topBar
+        function onPanelsToggleRequested() { panels.toggle() }
+    }
 
     Sidebar {}
 

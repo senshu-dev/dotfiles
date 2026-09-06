@@ -30,3 +30,4 @@ done
 img=$(find "$WALLS_DIR" -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) | shuf -n 1)
 hyprctl hyprpaper wallpaper "$MONITOR1,$img"
 hyprctl hyprpaper wallpaper "$MONITOR2,$img"
+~/.local/bin/themegen

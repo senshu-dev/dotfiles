@@ -5,145 +5,61 @@ import QtQuick.Layouts
 import QtQuick.Effects
 
 import qs.services
-import qs.widgets
 
-// Top-center dynamic island: collapsed (clock + focused app) springs open on
-// hover into a clock | weather | music rack, collapsing again after an idle
-// delay. Primary screen only; the input mask keeps clicks passing through the
-// transparent strip around the pill.
+// Top-center pill: clock, date, weather — nothing else. Fixed size, no
+// hover-expand, no in-place content morph. Tapping it toggles the Panels
+// window pair (wired in shell.qml); SUPER+` (see keybindings.lua) toggles
+// this bar's own autohide, unrelated and unchanged from before.
 PanelWindow {
     id: win
 
     screen: Quickshell.screens[1] // primary
+
+    // Set from shell.qml (panels.open) — drives the active-ring visual
+    // only. TopBar does not own the panels' open/close state.
+    property bool panelsOpen: false
+    signal panelsToggleRequested()
+
     color: "transparent"
     anchors { top: true; left: true; right: true }
-    implicitHeight: 96
+    implicitHeight: 70
 
-    // SUPER+` (see keybindings.lua) fully hides the bar and drops its
-    // exclusive zone, handing that strip back to tiled windows -- distinct
-    // from the hover collapse/expand below, which always keeps the
-    // collapsed pill's space reserved.
     property bool autohidden: false
     visible: !autohidden
-    // reserve only the collapsed pill's strip (top margin + collapsed height)
-    // when shown; the expanded hover overlays without pushing windows
-    // further, so it doesn't grow the zone either.
-    exclusiveZone: autohidden ? 0 : (8 + 34)
+    // Top gap is just the pill's own y (12px, screen edge to pill — layer
+    // shells aren't subject to Hyprland's tiling gaps). Bottom gap is our
+    // reserved padding (2px) PLUS Hyprland's general:gaps_out (10px on
+    // this host, applied to the first tiled window below), so 2+10=12
+    // matches the top's 12 exactly. If gaps_out changes, this 2 needs to
+    // change with it to stay symmetric.
+    exclusiveZone: autohidden ? 0 : (12 + 40 + 2)
 
-    function toggleAutohide() {
-        autohidden = !autohidden
-        if (autohidden) expanded = false
-    }
+    function toggleAutohide(): void { win.autohidden = !win.autohidden }
 
     IpcHandler {
         target: "topbar"
         function toggle(): void { win.toggleAutohide() }
     }
 
-    // input = the fixed trigger zone (base) unioned with the pill (so an
-    // expanded pill wider than the zone still takes clicks). The rest of the
-    // strip passes through. Base must be a real, always-valid item — an empty
-    // base region masks nothing and even the pill stops responding.
-    mask: Region {
-        item: hoverZone
-        Region { item: pill }
-    }
+    // Only the pill itself takes clicks; the rest of the transparent strip
+    // passes clicks through to whatever's tiled underneath.
+    mask: Region { item: pill }
 
-    property bool expanded: false
-    readonly property bool hasMusic: Mpris.activePlayer !== null
-
-    // single collapse rule: stay open while EITHER the trigger zone or the pill
-    // is hovered, collapse only when both are false. Two independent handlers
-    // (one firing unhover while the other is still hovered) is what stuck the
-    // island collapsed on a fast pass through the zone.
-    function refreshHover() {
-        if (zoneHover.hovered || pillHover.hovered) { collapseTimer.stop(); expanded = true }
-        else collapseTimer.restart()
-    }
-
-    // content-fit widths for each state; the pill animates between them and the
-    // content opacity is driven by the pill's *current* width (below), so the
-    // widgets fade in exact lockstep with the morph — never lagging behind it.
-    readonly property real collapsedW: Math.max(120, collapsedRow.implicitWidth + 32)
-    readonly property real expandedW: rack.implicitWidth + 36
-    readonly property real progress: (expandedW - collapsedW) > 0
-        ? Math.max(0, Math.min(1, (pill.width - collapsedW) / (expandedW - collapsedW)))
-        : (expanded ? 1 : 0)
-
-    function weatherSlot(s) {
-        return s ? ({ temp: s.temp, icon: Quickshell.shellPath("assets/weather/" + Weather.iconFor(s.code) + ".svg") }) : null
-    }
-
-    function topWidget(id) {
-        switch (id) {
-            case "clock":   return clockTC
-            case "weather": return weatherTC
-            case "music":   return musicTC
-            default:
-                console.warn("TopBar: unknown widget", id)
-                return null
-        }
-    }
-
-    Component {
-        id: clockTC
-        ClockWidget { time: Time.clockTime; date: Time.longDate }
-    }
-
-    Component {
-        id: weatherTC
-        WeatherWidget {
-            morning: win.weatherSlot(Weather.morning)
-            now: win.weatherSlot(Weather.now)
-            evening: win.weatherSlot(Weather.evening)
-        }
-    }
-
-    Component {
-        id: musicTC
-        MusicWidget {
-            coverUrl: Mpris.activePlayer ? Mpris.activePlayer.trackArtUrl : ""
-            track: Mpris.activePlayer ? Mpris.activePlayer.trackTitle : ""
-            artist: Mpris.activePlayer ? Mpris.activePlayer.trackArtist : ""
-            playing: Mpris.isPlaying
-            canPrev: Mpris.canGoPrevious
-            canNext: Mpris.canGoNext
-            onPrev: Mpris.previous()
-            onNext: Mpris.next()
-            onPlayPause: Mpris.togglePlaying()
-        }
-    }
-
-    // fixed invisible approach trigger centered on the collapsed pill: a cursor
-    // thrown into this patch (overshooting the small pill, or landing beside it)
-    // expands the island. The pill's own hover keeps it open once expanded, so
-    // this only needs to cover the top-edge approach — hence the short height.
-    Item {
-        id: hoverZone
-        anchors.horizontalCenter: parent.horizontalCenter
-        y: 0
-        width: 400
-        height: 48
-
-        HoverHandler {
-            id: zoneHover
-            onHoveredChanged: win.refreshHover()
-        }
-    }
+    readonly property string tempText: Weather.now ? (Weather.now.temp + "°") : "--°"
+    readonly property string weatherIconSource: Weather.now
+        ? Quickshell.shellPath("assets/weather/" + Weather.iconFor(Weather.now.code) + ".svg")
+        : ""
 
     Rectangle {
         id: pill
         anchors.horizontalCenter: parent.horizontalCenter
-        y: 8
-        // width fits content in both states (so a long focused-app name or a
-        // hidden music widget don't break/overflow the pill).
-        width: win.expanded ? win.expandedW : win.collapsedW
-        height: win.expanded ? 76 : 34
+        y: 12
+        width: pillRow.implicitWidth + 32
+        height: 40
         radius: 12
-        color: Theme.surface
-        // clip content to the (animating) pill so widgets don't spill past the
-        // edges while the island resizes — e.g. the music rack during collapse.
-        clip: true
+        color: Theme.panelBg
+        border.width: win.panelsOpen ? 2 : 1
+        border.color: win.panelsOpen ? Theme.accentRing : Theme.borderSoft
 
         layer.enabled: true
         layer.effect: MultiEffect {
@@ -154,76 +70,57 @@ PanelWindow {
             shadowVerticalOffset: 4
         }
 
-        Behavior on width { NumberAnimation { duration: 380; easing.type: Easing.OutBack; easing.overshoot: 0.9 } }
-        Behavior on height { NumberAnimation { duration: 380; easing.type: Easing.OutBack; easing.overshoot: 0.9 } }
-
-        HoverHandler {
-            id: pillHover
-            onHoveredChanged: win.refreshHover()
+        TapHandler {
+            onTapped: win.panelsToggleRequested()
         }
 
-        // collapsed: clock + focused app
-        Row {
-            id: collapsedRow
-            anchors.centerIn: parent
-            spacing: 16
-            opacity: 1 - win.progress
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                text: Time.clockTime
-                color: Theme.text
-                font.family: Config.font.family
-                font.pixelSize: 12
-            }
-            FocusedApp {
-                anchors.verticalCenter: parent.verticalCenter
-                icon: FocusedWindow.icon
-                name: FocusedWindow.name
-            }
-        }
-
-        // expanded: config-driven rack (Config.topbar.widgets, in order) with
-        // separators; `music` auto-hides when there's no player.
         RowLayout {
-            id: rack
+            id: pillRow
             anchors.centerIn: parent
-            spacing: 18
-            // progress² so the rack fades ahead of the (OutBack-front-loaded) width
-            // morph — otherwise the pill snaps small while these widgets linger,
-            // half-clipped, inside it. Squaring makes them vanish before the
-            // collapse looks done (and fade in a touch later on expand).
-            opacity: win.progress * win.progress
-            enabled: win.expanded // no click/seek on the clipped rack while collapsed
+            spacing: 10
 
-            Repeater {
-                model: Config.topbar.widgets
-                delegate: RowLayout {
-                    required property int index
-                    required property var modelData
-                    visible: modelData === "music" ? win.hasMusic : true
-                    spacing: 18
+            ColumnLayout {
+                spacing: 0
+                Text {
+                    text: Time.clockTime
+                    color: Theme.text
+                    font.family: Config.font.family
+                    font.bold: true
+                    font.pixelSize: 13
+                }
+                Text {
+                    text: Time.longDate
+                    color: Theme.textFaint
+                    font.family: Config.font.family
+                    font.pixelSize: 10
+                }
+            }
 
-                    Rectangle {
-                        visible: index > 0
-                        Layout.alignment: Qt.AlignVCenter
-                        Layout.preferredWidth: 1
-                        Layout.preferredHeight: 56
-                        color: Theme.primary
-                    }
-                    Loader {
-                        Layout.alignment: Qt.AlignVCenter
-                        sourceComponent: win.topWidget(modelData)
-                    }
+            Rectangle {
+                Layout.preferredWidth: 1
+                Layout.fillHeight: true
+                Layout.topMargin: 4
+                Layout.bottomMargin: 4
+                color: Theme.borderSoft
+            }
+
+            RowLayout {
+                spacing: 6
+                Image {
+                    Layout.preferredWidth: 15
+                    Layout.preferredHeight: 15
+                    sourceSize: Qt.size(15, 15)
+                    fillMode: Image.PreserveAspectFit
+                    source: win.weatherIconSource
+                }
+                Text {
+                    text: win.tempText
+                    color: Theme.accent
+                    font.family: Config.font.family
+                    font.bold: true
+                    font.pixelSize: 13
                 }
             }
         }
     }
-
-    Timer {
-        id: collapseTimer
-        interval: Config.topbar.collapseDelay
-        onTriggered: win.expanded = false
-    }
-
 }
