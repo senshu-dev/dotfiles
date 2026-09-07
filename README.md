@@ -179,6 +179,21 @@ available key with its default value and an explanation, or copy
 [`config.example.json`](.config/quickshell/config.example.json) as a
 starting point (`cp config.example.json config.<your-hostname>.json`).
 
+## DankMaterialShell fork submodule
+
+`.config/dank-shell` is a git submodule (the DankMaterialShell fork this
+project is built on). After cloning or pulling this repo, run:
+
+```bash
+git submodule update --init --recursive
+```
+
+The Go daemon binary is gitignored and must be built, not copied:
+
+```bash
+cd .config/dank-shell/core && make
+```
+
 ## Development
 
 Pure-logic modules (`modules/scripts/*.js`, `services/scripts/*.js`) have
