@@ -1,0 +1,3 @@
+[submodule ".config/dank-shell"]
+	path = .config/dank-shell
+	url = /home/senshu_/workspace/dank-shell
