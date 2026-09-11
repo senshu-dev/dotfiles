@@ -37,6 +37,7 @@ PACMAN_PACKAGES=(
     bluez              # bluetoothd; services/Bluetooth.qml talks to it over D-Bus
     bluez-utils        # bluetoothctl (CLI), bluetuith's backend
     matugen            # wallpaper -> Material You palette; dms shells out to it directly
+    adw-gtk-theme      # adw-gtk3/adw-gtk3-dark; dms flips gtk-theme via gsettings on theme change
 )
 
 AUR_PACKAGES=(
