@@ -24,3 +24,5 @@ require("config.options")
 require("lazy").setup("plugins", {
 	install = { colorscheme = { "habamax" } },
 })
+
+require("config.theme")
