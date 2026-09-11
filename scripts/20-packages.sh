@@ -73,7 +73,11 @@ setup_pacman_packages() {
 
 setup_aur_packages() {
     info "Installing AUR packages with yay"
-    yay -S --noconfirm "${AUR_PACKAGES[@]}"
+    # --nocheck: helm-ls's PKGBUILD runs network-dependent integration
+    # tests in check() that fail in a sandboxed build (confirmed on this
+    # host); skipping tests doesn't affect the built binary, only the
+    # packager's own pre-install verification.
+    yay -S --noconfirm --mflags --nocheck "${AUR_PACKAGES[@]}"
     ok "AUR packages installed"
 }
 
