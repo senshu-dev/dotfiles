@@ -17,11 +17,8 @@ hl.bind("CTRL + SHIFT + ESCAPE",        hl.dsp.exec_cmd(launchPrefix .. programs
 hl.bind(mainMod .. " + s",        hl.dsp.exec_cmd('grim -g "$(slurp)" - | tee ~/screenshot_$(date +%Y%m%d_%H%M%S).png | wl-copy'))
 hl.bind(mainMod .. " + e",        hl.dsp.exec_cmd(launchPrefix .. programs.fileManager))
 hl.bind(mainMod .. " + escape",   hl.dsp.exec_cmd("hyprctl reload"))
--- Wallpaper & Theme window: browse ~/walls with a live theme preview,
--- Apply commits both the wallpaper and the matugen-derived theme
--- together. Replaces the old direct waypaper launch (waypaper itself
--- stays installed but nothing launches it anymore — see the design
--- spec's Non-goals).
+-- DMS's own wallpaper picker (dash's wallpaper tab): browses ~/walls,
+-- picking a wallpaper also drives matugen theming (currentTheme: dynamic).
 hl.bind(mainMod .. " + w",        hl.dsp.exec_cmd("qs ipc call dash toggle wallpaper"))
 
 hl.bind(mainMod .. " + c",                hl.dsp.window.close())

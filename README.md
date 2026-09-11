@@ -1,8 +1,8 @@
 # dotfiles
 
 [CachyOS](https://cachyos.org/) + Hyprland desktop, provisioned by a set of
-shell scripts and themed by a custom [Quickshell](https://quickshell.org/)
-desktop shell.
+shell scripts and themed by a [DankMaterialShell](https://github.com/AvengeMedia/DankMaterialShell)
+fork running on [Quickshell](https://quickshell.org/).
 
 > **Targets CachyOS**, not vanilla Arch. A couple of provisioning steps rely
 > on CachyOS-only packages/repos (mirror ranking via `cachyos-rate-mirrors`,
@@ -43,9 +43,11 @@ git clone https://github.com/senshu-dev/dotfiles.git && cd dotfiles
   native config format since 0.55 (May 2026) — `hyprland.lua` auto-loads
   instead of `hyprland.conf` if present, no patched build or extra package
   required.
-- **`.config/quickshell/`** — a full custom desktop shell for Hyprland: top
-  bar, hover sidebar, app launcher, theme switcher, notifications, lock
-  screen theming — all built on [Quickshell](https://quickshell.org/).
+- **`.config/dank-shell/`** — a git submodule fork of
+  [DankMaterialShell](https://github.com/AvengeMedia/DankMaterialShell),
+  deployed as the live desktop shell (top bar, dock, wallpaper/theme picker,
+  notifications, control center, ...). See "DankMaterialShell fork
+  submodule" below.
 - **`.config/kitty/`** — terminal config with theme sync.
 - **`qylock-sddm.sh`** — standalone SDDM login-theme manager (not part of the
   automated setup; run manually when wanted).
@@ -132,53 +134,6 @@ full opacity, and tearing enabled. Verified against a real Steam title;
 window-open-time properties (workspace, fullscreen) only apply to windows
 opened *after* the rule is loaded, not already-running ones.
 
-## Quickshell shell (`.config/quickshell/`)
-
-A layered custom shell for Hyprland (0.3.0, Qt 6.11), one-way dependencies
-downward:
-
-- **`services/`** — data-only singletons: system stats, audio, network,
-  bluetooth, brightness, battery, notifications, weather, Hyprland IPC,
-  installed apps, and **`Config`** (see Configuration below).
-- **`components/`** — generic UI primitives (buttons, sliders, progress
-  rings, icons) with no data dependencies.
-- **`widgets/`** — dumb, placeholder-driven components built from
-  `components/`, wired to real data by `modules/`.
-- **`modules/`** — the actual panels: top bar (dynamic island), hover
-  sidebar, app launcher, theme switcher, power menu, clipboard menu,
-  notifications.
-
-### Features
-
-- **Top bar** — collapses to a small "island" that expands on hover into a
-  configurable widget rack (clock, weather, music, ...).
-- **Sidebar** — a hidden rail on the right edge that springs open on hover.
-  Config-driven grid of tiles (volume, brightness, mic, network, bluetooth,
-  system stats, power, ...); scroll to adjust values, right-click to
-  toggle, left-click for actions (network/bluetooth open a TUI in a
-  terminal). Keyboard-navigable while open.
-- **App launcher** and **theme switcher** — radial menus, IPC-toggleable
-  (`qs ipc call appmenu toggle`, `qs ipc call thememenu toggle`).
-- **16 built-in themes** (Nord, Catppuccin, Dracula, Gruvbox, One Dark/Light,
-  Rose Pine, Solarized, Tokyo Night, GitHub Light, ...), switchable live from
-  the theme menu.
-- **Theming reaches beyond the shell**: committing a theme also live-updates
-  kitty's colors, regenerates hyprlock's palette, and (for GTK4/libadwaita
-  apps) follows the system light/dark scheme live via the freedesktop
-  appearance portal.
-
-### Configuration
-
-`services/Config.qml` loads `config.json` (base, tracked in git), then
-deep-merges `config.<hostname>.json` (optional, per-machine — read from
-`/etc/hostname`) on top. Both hot-reload. **Arrays replace wholesale** on
-merge — a host file that overrides `sidebar.items` replaces the entire list,
-it doesn't merge by index. See
-[`config.example.md`](.config/quickshell/config.example.md) for every
-available key with its default value and an explanation, or copy
-[`config.example.json`](.config/quickshell/config.example.json) as a
-starting point (`cp config.example.json config.<your-hostname>.json`).
-
 ## DankMaterialShell fork submodule
 
 `.config/dank-shell` is a git submodule (the DankMaterialShell fork this
@@ -229,26 +184,20 @@ session start.
 
 ## Development
 
-Pure-logic modules (`modules/scripts/*.js`, `services/scripts/*.js`) have
-matching `*.test.mjs` files runnable with plain Node:
-
-```bash
-node .config/quickshell/modules/scripts/search.test.mjs
-node .config/quickshell/modules/scripts/sidebar-layout.test.mjs
-node .config/quickshell/modules/scripts/clipboard.test.mjs
-node .config/quickshell/services/scripts/weather.test.mjs
-```
-
 Quickshell itself only runs under a real Wayland/Hyprland session (layer-shell
 app) — there's no way to preview it outside one. Useful IPC toggles while
-running:
+running (`dms ipc call --help` / `.config/dank-shell/docs/IPC.md` for the
+full list):
 
 ```bash
-qs ipc call appmenu toggle
+qs ipc call launcher toggle
 qs ipc call thememenu toggle
 qs ipc call powermenu toggle
 qs ipc call clipboard toggle
+qs ipc call dash toggle wallpaper
 ```
+
+The dank-shell submodule has its own Go test suite (`cd .config/dank-shell/core && go test ./...`).
 
 ## VS Code profile (`.config/vscode.code-profile`)
 

@@ -10,7 +10,6 @@ local variables = {
         terminal        = "kitty",
         fileManager     = "nautilus",
         menu            = "qs ipc call launcher toggle",
-        wallpaperPicker = "waypaper",
     },
 
     -- Output names driving workspace assignment (rules.lua) and per-monitor

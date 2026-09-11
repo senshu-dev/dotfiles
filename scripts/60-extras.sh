@@ -7,7 +7,6 @@
 # One entry per extra; the entry is the suffix of its setup_ function.
 EXTRAS=(
     zen
-    bluetooth
     vscode
     podman
     binenv
@@ -15,7 +14,6 @@ EXTRAS=(
     gaming
     xray
     hyprtasking
-    wallpaperengine
     wallpapers
 )
 
@@ -94,12 +92,6 @@ MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme
 DESKTOP
     rm -rf "$tmp"
     ok "zen installed"
-}
-
-setup_bluetooth() {
-    info "Enabling bluetooth.service"
-    sudo systemctl enable --now bluetooth
-    ok "bluetooth.service enabled"
 }
 
 setup_vscode() {
@@ -231,16 +223,6 @@ setup_hyprtasking() {
     yes | hyprpm add "file://$src"
     hyprpm enable hyprtasking
     ok "hyprtasking installed and enabled"
-}
-
-# linux-wallpaperengine: live animated Wallpaper Engine scenes. Not needed for
-# the default desktop -- hyprpaper + scripts/wallpaper.sh (static wallpapers,
-# near-0% idle) is the primary path -- so this is opt-in rather than a
-# PACMAN_PACKAGES/AUR_PACKAGES entry.
-setup_wallpaperengine() {
-    info "Installing linux-wallpaperengine-git"
-    yay -S --noconfirm linux-wallpaperengine-git
-    ok "linux-wallpaperengine-git installed"
 }
 
 # Full local mirror of dharmx/walls (github.com/dharmx/walls) -- ~3GB of

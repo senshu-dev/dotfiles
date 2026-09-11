@@ -18,7 +18,6 @@ PACMAN_PACKAGES=(
     hyprpolkitagent
     xdg-desktop-portal-hyprland
     hyprlock
-    hyprpaper
     hyprsunset
     hypridle
     mpv
@@ -37,8 +36,7 @@ PACMAN_PACKAGES=(
     libnetfilter_queue
     bluez              # bluetoothd; services/Bluetooth.qml talks to it over D-Bus
     bluez-utils        # bluetoothctl (CLI), bluetuith's backend
-    waypaper           # wallpaper picker with thumbnail previews, SUPER+w
-    matugen            # wallpaper -> Material You palette, Linux Rising dynamic theming
+    matugen            # wallpaper -> Material You palette; dms shells out to it directly
 )
 
 AUR_PACKAGES=(
