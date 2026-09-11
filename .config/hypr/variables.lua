@@ -9,7 +9,7 @@ local variables = {
     programs = {
         terminal        = "kitty",
         fileManager     = "nautilus",
-        menu            = "qs ipc call launcher toggle",
+        menu            = "qs ipc call appmenu open",
         wallpaperPicker = "waypaper",
     },
 

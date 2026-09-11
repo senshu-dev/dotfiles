@@ -8,13 +8,12 @@ hl.on("hyprland.start", function ()
     -- graphical-session.target (Requisite=graphical-session.target fails
     -- every start), a pre-existing gap unrelated to this shell, not fixed
     -- here. Launching directly instead, same as the old bare "quickshell"
-    -- line this replaces.
-    hl.exec_cmd("dms run --config ~/.config/quickshell")
+    -- line this replaces. No systemd supervision means no auto-restart on
+    -- crash either -- loop it ourselves and keep a log so a future crash
+    -- leaves evidence instead of just a dead bar.
+    hl.exec_cmd("sh -c 'while true; do dms run --config ~/.config/quickshell >>~/.cache/dms-run.log 2>&1; sleep 1; done'")
     hl.exec_cmd("hypridle")
     hl.exec_cmd("wl-paste --watch cliphist store &") -- feeds the sidebar clipboard-history tile
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &")
-    -- live wallpaperengine scene (heavier, animated) vs. pre-rendered hyprpaper frame
-    -- (near-0% idle, see scripts/wallpaper.sh) -- comment one, uncomment the other
-    -- hl.exec_cmd("linux-wallpaperengine --disable-mouse --fullscreen-pause-only-active --no-audio-processing -s --disable-parallax --fps 30 --scaling stretch --screen-root DP-1 --bg 3751292466 --screen-root HDMI-A-1 --bg $(ls -d ~/.steam/steam/steamapps/workshop/content/431960/* | xargs -n 1 basename | shuf -n 1)")
     hl.exec_cmd("~/.config/hypr/scripts/wallpaper.sh")
 end)

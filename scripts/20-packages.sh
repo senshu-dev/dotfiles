@@ -18,7 +18,6 @@ PACMAN_PACKAGES=(
     hyprlock
     hyprpaper
     hyprsunset
-    mako
     hypridle
     mpv
     imv                # default image viewer (screenshot tile, nautilus)
@@ -45,6 +44,8 @@ AUR_PACKAGES=(
     hyprmod
     nautilus-open-any-terminal  # "Open Terminal Here" -> kitty
     bluetuith                   # TUI bluetooth manager, sidebar bluetooth tile left-click
+    tty-clock
+    terminal-rain-lightning
 )
 
 setup_pacman_packages() {
