@@ -6,6 +6,8 @@ PACMAN_PACKAGES=(
     zip
     unzip
     uwsm
+    go                  # builds dms (dank-shell core), scripts/40-config.sh
+    make
     playerctl
     brightnessctl
     quickshell

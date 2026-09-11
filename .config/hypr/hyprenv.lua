@@ -11,6 +11,10 @@ hl.env("QT_QPA_PLATFORMTHEME", "hyprqt6engine")
 -- GTK_THEME is intentionally NOT set: a hardcoded value overrides gsettings,
 -- which is what theme-variant.sh toggles for runtime light/dark switching.
 hl.env("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1")
+-- Qt 6's image-bomb guard defaults to 256MiB decoded-size and silently
+-- drops anything over it ("QImageIOHandler: Rejecting image..."), which
+-- broke DMS's own WallpaperBackground on some of ~/walls' larger images.
+hl.env("QT_IMAGEIO_MAXALLOC", "1024")
 hl.env("LIBVA_DRIVER_NAME", "nvidia")
 hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
 hl.env("NVD_BACKEND", "direct")

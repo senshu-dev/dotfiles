@@ -14,13 +14,18 @@ setup_config() {
         return 0
     fi
 
+    info "Initializing dank-shell submodule"
+    git -C "$scripts_dir/.." submodule update --init --recursive
+    ok "dank-shell submodule ready"
+
     info "Installing .config"
     mkdir -p "$HOME/.config"
     cp -r "$config_dir/." "$HOME/.config/"
     ok ".config installed"
 
-    info "Building themegen"
+    info "Building dms (dank-shell core)"
+    make -C "$config_dir/dank-shell/core" build
     mkdir -p "$HOME/.local/bin"
-    (cd "$HOME/.config/hypr/scripts/themegen" && go build -o "$HOME/.local/bin/themegen" -trimpath .)
-    ok "themegen built to ~/.local/bin/themegen"
+    ln -sf "$config_dir/dank-shell/core/bin/dms" "$HOME/.local/bin/dms"
+    ok "dms built and linked to ~/.local/bin/dms"
 }

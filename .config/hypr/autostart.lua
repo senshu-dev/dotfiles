@@ -15,5 +15,8 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("hypridle")
     hl.exec_cmd("wl-paste --watch cliphist store &") -- feeds the sidebar clipboard-history tile
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &")
-    hl.exec_cmd("~/.config/hypr/scripts/wallpaper.sh")
+    -- wallpaper.sh (hyprpaper + themegen, Linux Rising-era) retired: it
+    -- fought DMS's own WallpaperBackground.qml for the background layer
+    -- and overwrote wallpaper picks with a random one on every login. DMS
+    -- now owns wallpaper + matugen theming end to end (SUPER+w).
 end)
