@@ -7,7 +7,7 @@ Requisite=graphical-session.target
 [Service]
 Type=dbus
 BusName=org.freedesktop.Notifications
-ExecStart=%h/.config/dank-shell/core/bin/dms run --session --config %h/.config/dank-shell/quickshell
+ExecStart=%h/.config/dank-shell/core/bin/dms run --session --config %h/.config/quickshell
 ExecReload=/bin/kill -USR1 $MAINPID
 LimitNOFILE=16384:infinity
 Restart=on-failure

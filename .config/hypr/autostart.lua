@@ -3,7 +3,13 @@ hl.on("hyprland.start", function ()
     -- instance on its own -- without this, tasking.lua's binds call into
     -- a nil hl.plugin.hyprtasking and error out the moment they fire.
     hl.exec_cmd("hyprpm reload -n")
-    hl.exec_cmd("quickshell")
+    -- dms.service exists (~/.config/systemd/user/dms.service) but stays
+    -- disabled: this host's systemd user session never activates
+    -- graphical-session.target (Requisite=graphical-session.target fails
+    -- every start), a pre-existing gap unrelated to this shell, not fixed
+    -- here. Launching directly instead, same as the old bare "quickshell"
+    -- line this replaces.
+    hl.exec_cmd("dms run --config ~/.config/quickshell")
     hl.exec_cmd("hypridle")
     hl.exec_cmd("wl-paste --watch cliphist store &") -- feeds the sidebar clipboard-history tile
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &")
