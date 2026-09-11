@@ -38,6 +38,20 @@ PACMAN_PACKAGES=(
     bluez-utils        # bluetoothctl (CLI), bluetuith's backend
     matugen            # wallpaper -> Material You palette; dms shells out to it directly
     adw-gtk-theme      # adw-gtk3/adw-gtk3-dark; dms flips gtk-theme via gsettings on theme change
+    neovim             # tracked for reproducibility; already on this host
+    sshfs              # nvim remote workflow: mount remote dirs, edit with full local LSP
+    ripgrep            # telescope live_grep backend
+    fd                 # telescope find_files backend
+    tree-sitter-cli    # nvim-treesitter parser installs
+    gopls              # nvim LSP: Go
+    pyright            # nvim LSP: Python
+    bash-language-server    # nvim LSP: Bash
+    yaml-language-server    # nvim LSP: YAML (k8s/Helm schemas)
+    dockerfile-language-server  # nvim LSP: Dockerfile
+    lua-language-server     # nvim LSP: Lua (editing this config)
+    arduino-cli         # Arduino/ESP: board cores, sketch scaffolding, compile db
+    clang               # provides clangd; nvim LSP for .ino (Arduino/ESP) via arduino-cli's compile_commands.json
+    jq                  # scripts/40-config.sh: idempotent settings.json patch
 )
 
 AUR_PACKAGES=(
@@ -47,6 +61,8 @@ AUR_PACKAGES=(
     bluetuith                   # TUI bluetooth manager, sidebar bluetooth tile left-click
     tty-clock
     terminal-rain-lightning
+    terraform-ls        # nvim LSP: Terraform
+    helm-ls              # nvim LSP: Helm
 )
 
 setup_pacman_packages() {
