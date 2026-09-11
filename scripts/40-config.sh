@@ -4,6 +4,21 @@
 # resolves its own path so it works no matter where setup.sh is invoked
 # from.
 
+# DMS's own matugen "neovim" template is disabled by default
+# (matugenTemplateNeovim: false in SettingsSpec.js) - flip it on so
+# ~/.config/nvim/colors/dms.lua gets generated. Idempotent: creates the
+# settings file if DMS hasn't run yet, merges the key if it has, never
+# touches any other setting.
+enable_nvim_matugen_template() {
+    local settings_file="$HOME/.config/DankMaterialShell/settings.json"
+    mkdir -p "$(dirname "$settings_file")"
+    [[ -f "$settings_file" ]] || echo '{}' >"$settings_file"
+    local tmp
+    tmp="$(mktemp)"
+    jq '.matugenTemplateNeovim = true' "$settings_file" >"$tmp" && mv "$tmp" "$settings_file"
+    ok "matugenTemplateNeovim enabled in DMS settings"
+}
+
 setup_config() {
     local scripts_dir config_dir
     scripts_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -22,6 +37,8 @@ setup_config() {
     mkdir -p "$HOME/.config"
     cp -r "$config_dir/." "$HOME/.config/"
     ok ".config installed"
+
+    enable_nvim_matugen_template
 
     info "Building dms (dank-shell core)"
     make -C "$config_dir/dank-shell/core" build
