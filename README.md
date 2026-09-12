@@ -92,10 +92,11 @@ Written in Lua (`hl.*` config API) rather than plain `hyprland.conf`:
 - **`monitor.lua`**, **`hyprenv.lua`**, **`hyprland.lua`**, **`visual.lua`**,
   **`keybindings.lua`**, **`rules.lua`**, **`autostart.lua`** — one concern
   per file, all `require`d from `hyprland.lua`.
-- **`hyprlock.conf`** / **`hypridle.conf`** — lock screen + idle timeouts.
-  `hyprlock.conf`'s colors are generated (see Theming below), not hand-tuned.
+- **`hypridle.conf`** — idle timeouts + `loginctl lock-session` signalling.
+  Lock screen itself is owned by the DankMaterialShell fork now, not a
+  file in this repo.
 - **`scripts/`** — small helper scripts: workspace cycling, theme sync for
-  kitty/GTK/hyprlock, light/dark variant switching.
+  kitty/GTK, light/dark variant switching.
 
 ### Keybindings
 
