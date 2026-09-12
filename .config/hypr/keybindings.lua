@@ -19,6 +19,8 @@ hl.bind(mainMod .. " + escape", hl.dsp.exec_cmd("hyprctl reload"))
 -- DMS's own wallpaper picker (dash's wallpaper tab): browses ~/walls,
 -- picking a wallpaper also drives matugen theming (currentTheme: dynamic).
 hl.bind(mainMod .. " + w", hl.dsp.exec_cmd("qs ipc call dash toggle wallpaper"))
+-- DMS's built-in lock screen (Modules/Lock); hyprlock retired, see sub-project 6.
+hl.bind(mainMod .. " + l", hl.dsp.exec_cmd("qs ipc call lock lock"))
 
 hl.bind(mainMod .. " + c", hl.dsp.window.close())
 hl.bind(mainMod .. " + q", hl.dsp.window.close())

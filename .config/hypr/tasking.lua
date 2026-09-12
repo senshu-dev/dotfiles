@@ -28,7 +28,6 @@ end, { non_consuming = true })
 hl.bind(mainMod .. " + x", function() hl.plugin.hyprtasking.killhovered() end)
 
 hl.bind(mainMod .. " + h",         function() hl.plugin.hyprtasking.move("left") end)
-hl.bind(mainMod .. " + l",         function() hl.plugin.hyprtasking.move("right") end)
 hl.bind(mainMod .. " + SHIFT + h", function() hl.plugin.hyprtasking.movewindow("left") end)
 hl.bind(mainMod .. " + SHIFT + l", function() hl.plugin.hyprtasking.movewindow("right") end)
 
