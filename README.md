@@ -82,6 +82,7 @@ quit; everything installs if run non-interactively, e.g. piped from curl):
 | `binenv` | [binenv](https://github.com/devops-works/binenv) (official install script) — a version manager for CLI binaries |
 | `k9s` | Kubernetes TUI (AUR) |
 | `gaming` | CachyOS gaming meta packages — **requires the [CachyOS repo](https://wiki.cachyos.org/cachyos_repo/) already added to `pacman.conf`**, not part of vanilla Arch |
+| `xray` | [Xray-core](https://github.com/XTLS/Xray-core) (built from source, pinned commit), `cap_net_admin` granted for tun mode. Driven by `hypr/scripts/xray-instance.sh`, see below |
 
 ## Hyprland config (`.config/hypr/`)
 
@@ -99,7 +100,8 @@ Written in Lua (`hl.*` config API) rather than plain `hyprland.conf`:
   Lock screen itself is owned by the DankMaterialShell fork now, not a
   file in this repo.
 - **`scripts/`** — small helper scripts: workspace cycling, theme sync for
-  kitty/GTK, light/dark variant switching.
+  kitty/GTK, light/dark variant switching, `xray-instance.sh` (VPN tunnel
+  control, see below).
 
 ### Keybindings
 
@@ -129,6 +131,74 @@ Mod key is `SUPER` (defined in `variables.lua`).
 | `Print` / `SUPER + S` | Region screenshot → clipboard + file |
 | Mouse: `SUPER + drag/resize` | Move / resize windows |
 | `XF86Audio*`, `XF86MonBrightness*` | Volume, mute, brightness (hardware keys) |
+
+### xray-instance.sh (Xray-core VPN tunnel)
+
+`hypr/scripts/xray-instance.sh start|stop|status [tun|proxy]` runs an
+[Xray-core](https://github.com/XTLS/Xray-core) VLESS tunnel as a transient
+`systemd --user` unit. `tun` is full system-wide capture via Xray's own
+native tun inbound (no NetworkManager/polkit setup); `proxy` is local
+SOCKS5 (`10808`)/HTTP (`10809`) inbounds + the GNOME system-proxy gsetting.
+`start` always stops the opposite mode first — the two don't stack.
+
+Its config files are **deliberately not in this repo** (they hold bare VLESS
+credentials) — create them yourself at:
+
+- `~/.local/state/xray-instance/tun-config.json`
+- `~/.local/state/xray-instance/proxy-config.json`
+
+Template for `tun-config.json`:
+
+```json
+{
+  "inbounds": [
+    {
+      "protocol": "tun",
+      "settings": {
+        "name": "xray-tun0",
+        "mtu": 1500,
+        "autoSystemRoutingTable": ["0.0.0.0/0", "::/0"],
+        "autoOutboundsInterface": "auto"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "your-server.example.com",
+            "port": 443,
+            "users": [
+              { "id": "<VLESS UUID>", "encryption": "none", "flow": "xtls-rprx-vision" }
+            ]
+          }
+        ]
+      },
+      "streamSettings": { "network": "tcp", "security": "reality", "realitySettings": {} }
+    }
+  ]
+}
+```
+
+`proxy-config.json` is the same `outbounds` block, with `inbounds` swapped
+for local SOCKS/HTTP listeners instead of `tun` (ports must match
+`SOCKS_PORT`/`HTTP_PORT` in the script, `10808`/`10809`):
+
+```json
+{
+  "inbounds": [
+    { "protocol": "socks", "port": 10808, "listen": "127.0.0.1" },
+    { "protocol": "http", "port": 10809, "listen": "127.0.0.1" }
+  ],
+  "outbounds": [ /* same VLESS outbound as tun-config.json */ ]
+}
+```
+
+`streamSettings` (`security`/`realitySettings`/`tlsSettings`/`flow`) depends
+on what your VLESS server actually offers — copy those fields from whatever
+your VPN provider gives you, the shape above is just Reality as an example.
 
 ### Gaming performance rules
 
