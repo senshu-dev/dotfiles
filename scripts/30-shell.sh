@@ -14,6 +14,11 @@ setup_shell() {
     if [[ -f "$HOME/.zshrc" ]]; then
         info "Setting zsh theme to 'theunraveler'"
         sed -i 's/ZSH_THEME=".*"/ZSH_THEME="theunraveler"/' "$HOME/.zshrc"
+
+        if ! grep -q 'zoxide init zsh' "$HOME/.zshrc"; then
+            info "Adding zoxide init to .zshrc"
+            echo -e '\neval "$(zoxide init zsh)"' >> "$HOME/.zshrc"
+        fi
     else
         warn ".zshrc not found, skipping theme"
     fi

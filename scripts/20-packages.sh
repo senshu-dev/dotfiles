@@ -20,6 +20,8 @@ PACMAN_PACKAGES=(
     hyprlock
     hyprsunset
     hypridle
+    fzf
+    zoxide
     mpv
     imv                # default image viewer (screenshot tile, nautilus)
     yay
@@ -52,6 +54,11 @@ PACMAN_PACKAGES=(
     arduino-cli         # Arduino/ESP: board cores, sketch scaffolding, compile db
     clang               # provides clangd; nvim LSP for .ino (Arduino/ESP) via arduino-cli's compile_commands.json
     jq                  # scripts/40-config.sh: idempotent settings.json patch
+    ruff                # nvim format-on-save: Python (conform.nvim)
+    shfmt               # nvim format-on-save: Bash (conform.nvim)
+    delve               # nvim DAP: Go debugger backend (nvim-dap-go)
+    python-debugpy      # nvim DAP: Python debugger backend (nvim-dap-python)
+    bun                 # runtime for the vscode-bash-debug adapter (AUR)
 )
 
 AUR_PACKAGES=(
@@ -63,6 +70,8 @@ AUR_PACKAGES=(
     terminal-rain-lightning
     terraform-ls        # nvim LSP: Terraform
     helm-ls              # nvim LSP: Helm
+    bashdb               # nvim DAP: Bash debugger engine, driven by vscode-bash-debug
+    vscode-bash-debug    # nvim DAP: Bash debug adapter (/usr/bin/vscode-bash-debug)
 )
 
 setup_pacman_packages() {
