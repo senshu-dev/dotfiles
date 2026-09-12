@@ -15,6 +15,7 @@ EXTRAS=(
     xray
     hyprtasking
     wallpapers
+    yc
 )
 
 setup_extras() {
@@ -239,4 +240,10 @@ setup_wallpapers() {
         git clone --quiet --depth 1 https://github.com/dharmx/walls "$WALLS_REPO_DEST"
     fi
     ok "Wallpapers downloaded to $WALLS_REPO_DEST"
+}
+
+setup_yc() {
+    info "Installing Yandex Cloud CLI (yc)"
+    curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -r "$HOME/.zshrc"
+    ok "yc installed"
 }
