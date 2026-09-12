@@ -137,8 +137,7 @@ setup_binenv() {
     if [[ -f ~/.config/hypr/hyprenv.lua ]] && ! grep -q 'hl.env("PATH"' ~/.config/hypr/hyprenv.lua; then
         printf '\nhl.env("PATH", os.getenv("HOME") .. "/.binenv:" .. os.getenv("PATH"))\n' >> ~/.config/hypr/hyprenv.lua
     fi
-    exec $SHELL
-    ok "binenv installed"
+    ok "binenv installed (restart your shell, or run 'exec \$SHELL', to pick up PATH changes)"
 }
 
 setup_k9s() {
