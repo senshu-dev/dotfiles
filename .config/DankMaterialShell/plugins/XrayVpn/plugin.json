@@ -1,0 +1,13 @@
+{
+    "id": "xrayVpn",
+    "name": "Xray VPN (tun)",
+    "description": "Toggle the Xray-core VLESS tunnel (tun mode) via xray-instance.sh",
+    "version": "1.0.0",
+    "author": "senshu_",
+    "type": "widget",
+    "capabilities": ["control-center"],
+    "component": "./XrayVpn.qml",
+    "icon": "vpn_lock",
+    "settings": "./Settings.qml",
+    "permissions": ["settings_write", "process"]
+}
