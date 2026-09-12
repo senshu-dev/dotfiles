@@ -17,7 +17,6 @@ PACMAN_PACKAGES=(
     wf-recorder        # sidebar recording tile
     hyprpolkitagent
     xdg-desktop-portal-hyprland
-    hyprlock
     hyprsunset
     hypridle
     fzf
