@@ -26,9 +26,4 @@ setup_fingerprint() {
     info "Installing libfprint driver (install-goodixgf.sh)"
     (cd "$driver_dir" && bash install-goodixgf.sh)
     ok "Fingerprint driver installed"
-
-    warn "Enroll/verify must run locally on this machine (not over SSH) --" \
-         "fprintd's polkit policy only authorizes the active local session:"
-    warn "  fprintd-enroll -f right-index-finger \$USER"
-    warn "  fprintd-verify \$USER"
 }
