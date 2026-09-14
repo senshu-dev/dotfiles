@@ -27,3 +27,15 @@ warn()  { printf '%b[ warn ]:%b %s\n' "$YELLOW" "$NC" "$*" >&2; }
 
 # Fatal problems.
 error() { printf '%b[ error ]:%b %s\n' "$RED" "$NC" "$*" >&2; }
+
+# Resolves which hosts/<name>/ overlay to use: $DOTFILES_HOST if set, else
+# `hostname`. Hard-fails on an unrecognized host instead of silently running
+# the wrong overlay -- add hosts/<name>/ first when provisioning a new machine.
+detect_host() {
+    local host="${DOTFILES_HOST:-$(hostname)}"
+    if [[ ! -d "$SCRIPT_DIR/hosts/$host" ]]; then
+        error "Unknown host '$host' -- add hosts/$host/ (or set DOTFILES_HOST) first"
+        exit 1
+    fi
+    printf '%s\n' "$host"
+}

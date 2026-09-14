@@ -1,3 +1,6 @@
 [submodule ".config/dank-shell"]
 	path = .config/dank-shell
     url = https://github.com/senshu-dev/quickshell.git
+[submodule "drivers/goodix-27c6-5125"]
+	path = drivers/goodix-27c6-5125
+	url = https://github.com/Rockytkg/goodix-linux-27c6-5125.git

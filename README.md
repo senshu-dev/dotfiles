@@ -23,7 +23,8 @@ curl -fsSL https://raw.githubusercontent.com/senshu-dev/dotfiles/main/setup.sh |
 ```
 
 This clones the repo to a temp directory and runs every provisioning step in
-order (mirrors, packages, shell, config, fonts, extras). Safe to re-run.
+order (mirrors, packages, shell, config, fingerprint, fonts, extras). Safe to
+re-run.
 
 To run only some steps, clone the repo yourself and pass step names:
 
@@ -34,10 +35,28 @@ git clone https://github.com/senshu-dev/dotfiles.git && cd dotfiles
 ./setup.sh --help
 ```
 
+## Hosts
+
+This repo is deployed on two machines, `desktop` and `laptop`, which differ
+in monitors, GPU (NVIDIA vs AMD-only), and the laptop's fingerprint sensor.
+`hosts/<hostname>/` holds only what's actually different:
+
+- `hosts/<hostname>/config/` — overlaid on top of the shared `.config/`
+  during the `config` step (same relative paths, e.g.
+  `hosts/laptop/config/hypr/variables.lua` → `~/.config/hypr/variables.lua`).
+- `hosts/<hostname>/packages.sh` — optional `HOST_PACMAN_PACKAGES` /
+  `HOST_AUR_PACKAGES` arrays, appended to the common lists in the `packages`
+  step.
+
+The host is detected from `hostname`, overridable with `DOTFILES_HOST` (e.g.
+for testing). Running on an unrecognized host fails loudly rather than
+silently applying the wrong overlay — add a `hosts/<name>/` directory first.
+
 ## What's here
 
 - **`setup.sh` + `scripts/NN-*.sh`** — provisioning for a fresh CachyOS
-  install: mirrors, packages, shell, dotfiles, fonts, optional extras.
+  install: mirrors, packages, shell, dotfiles, fingerprint driver, fonts,
+  optional extras.
 - **`.config/hypr/`** — Hyprland config, written in **Lua** (`hl.*` API)
   rather than the classic `hyprland.conf` syntax. See
   [`docs/hyprland.md`](docs/hyprland.md) for the file layout, keybindings,
@@ -48,6 +67,9 @@ git clone https://github.com/senshu-dev/dotfiles.git && cd dotfiles
   notifications, control center, ...). See
   [`docs/dank-shell.md`](docs/dank-shell.md).
 - **`.config/kitty/`** — terminal config with theme sync.
+- **`drivers/goodix-27c6-5125/`** — a git submodule fork providing a Goodix
+  `27c6:5125` fingerprint sensor driver, **laptop only**. See
+  [`docs/fingerprint.md`](docs/fingerprint.md).
 - **`.config/nvim/`** — hand-rolled Neovim config (`lazy.nvim`, no distro
   like LazyVim/NvChad), themed live from the desktop's matugen palette. See
   [`docs/neovim.md`](docs/neovim.md).
@@ -69,7 +91,8 @@ git clone https://github.com/senshu-dev/dotfiles.git && cd dotfiles
 | `packages` | Install pacman + AUR packages (Hyprland, SDDM, kitty, Quickshell, nautilus, bluez, ...) |
 | `defaults` | Set Nautilus/imv/kitty as default file manager/image viewer/terminal, enable `sddm.service` |
 | `shell` | Install zsh + oh-my-zsh, set as default shell |
-| `config` | Copy `.config/` into `~/.config/` |
+| `config` | Copy `.config/` into `~/.config/` (overlaid with `hosts/<hostname>/config/`), build `dms`, deploy dank-shell as the live shell (first time only — see [`docs/dank-shell.md`](docs/dank-shell.md)) |
+| `fingerprint` | Install the Goodix `27c6:5125` fingerprint driver (laptop only, no-ops elsewhere) |
 | `fonts` | Install the AnnotationMono font |
 | `extras` | Interactive menu (see below) |
 
@@ -99,3 +122,5 @@ quit; everything installs if run non-interactively, e.g. piped from curl):
 - [`docs/dank-shell.md`](docs/dank-shell.md) — submodule setup, live deploy,
   rollback
 - [`docs/qylock.md`](docs/qylock.md) — SDDM theme management
+- [`docs/fingerprint.md`](docs/fingerprint.md) — Goodix `27c6:5125` driver
+  setup, enroll/verify, the `enroll` GUI, tuning (laptop only)
