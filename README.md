@@ -11,10 +11,10 @@ fork running on [Quickshell](https://quickshell.org/).
 > distro-agnostic Arch shell scripting and should work on stock Arch too,
 > but this hasn't been verified there.
 >
-> Assumes **Hyprland, kitty, and SDDM are already installed** — none of the
-> provisioning steps install them. Pick CachyOS's Hyprland edition (or the
-> minimal/no-DE installer option with Hyprland + kitty + SDDM selected) so
-> they're present before running `setup.sh`.
+> Runs on a bare CachyOS install with the "no desktop" / no-packages option
+> picked at install time — `packages` installs Hyprland, kitty, and SDDM
+> itself (and enables `sddm.service`) rather than assuming they're already
+> there.
 
 ## Install
 
@@ -61,7 +61,7 @@ git clone https://github.com/senshu-dev/dotfiles.git && cd dotfiles
 |---|---|
 | `mirrors` | Rank both the Arch and CachyOS mirrorlists (`cachyos-rate-mirrors`) |
 | `update` | `pacman -Syyu` |
-| `packages` | Install pacman + AUR packages (Hyprland, Quickshell, kitty, nautilus, bluez, ...) |
+| `packages` | Install pacman + AUR packages (Hyprland, SDDM, kitty, Quickshell, nautilus, bluez, ...), enable `sddm.service` |
 | `remove` | Remove unwanted defaults (Dolphin) and set Nautilus as the default file manager |
 | `shell` | Install zsh + oh-my-zsh, set as default shell |
 | `config` | Copy `.config/` into `~/.config/` |
@@ -83,6 +83,7 @@ quit; everything installs if run non-interactively, e.g. piped from curl):
 | `k9s` | Kubernetes TUI (AUR) |
 | `gaming` | CachyOS gaming meta packages — **requires the [CachyOS repo](https://wiki.cachyos.org/cachyos_repo/) already added to `pacman.conf`**, not part of vanilla Arch |
 | `xray` | [Xray-core](https://github.com/XTLS/Xray-core) (built from source, pinned commit), `cap_net_admin` granted for tun mode. Driven by `hypr/scripts/xray-instance.sh`, see below |
+| `office` | LibreOffice (`libreoffice-fresh`) + `hunspell-en_us`/`hunspell-ru` spellcheck, `ttf-liberation` (Word/Excel-compatible fonts), `evince` (PDF viewer) |
 
 ## Hyprland config (`.config/hypr/`)
 
@@ -94,8 +95,9 @@ Written in Lua (`hl.*` config API) rather than plain `hyprland.conf`:
   Update this file (and the monitor names specifically) when moving to a
   new machine or monitor layout.
 - **`monitor.lua`**, **`hyprenv.lua`**, **`hyprland.lua`**, **`visual.lua`**,
-  **`keybindings.lua`**, **`rules.lua`**, **`autostart.lua`** — one concern
-  per file, all `require`d from `hyprland.lua`.
+  **`keybindings.lua`**, **`gestures.lua`**, **`rules.lua`**,
+  **`autostart.lua`** — one concern per file, all `require`d from
+  `hyprland.lua`.
 - **`hypridle.conf`** — idle timeouts + `loginctl lock-session` signalling.
   Lock screen itself is owned by the DankMaterialShell fork now, not a
   file in this repo.
@@ -117,13 +119,11 @@ Mod key is `SUPER` (defined in `variables.lua`).
 | `SUPER + P` | Power menu |
 | `SUPER + V` | Clipboard history |
 | `SUPER + C` / `SUPER + Q` | Close window |
-| `SUPER + D` | Fullscreen (mode 1) |
 | `SUPER + F` | Fullscreen |
+| `SUPER + M` | Maximize (fullscreen mode 1, keeps bar/borders) |
 | `SUPER + B` | Pseudo-tile |
-| `SUPER + J` | Toggle split direction |
 | `SUPER + Alt + Space` | Toggle floating |
 | `ALT + Tab` | Cycle windows |
-| `ALT + Space` then arrows | Directional focus submap (`Esc` to exit) |
 | `SUPER + [1-8]` | Go to workspace N |
 | `SUPER + Left/Right` | Cycle main monitor's workspaces 1→2→3→4→1 (wraps, even through empty ones) |
 | `SUPER + Alt + Left/Right` | Same, for the second monitor's workspaces (5-8) |
@@ -131,6 +131,31 @@ Mod key is `SUPER` (defined in `variables.lua`).
 | `Print` / `SUPER + S` | Region screenshot → clipboard + file |
 | Mouse: `SUPER + drag/resize` | Move / resize windows |
 | `XF86Audio*`, `XF86MonBrightness*` | Volume, mute, brightness (hardware keys) |
+
+Layout is Hyprland's native `scrolling` (niri-style infinite horizontal
+tape of columns), set via `general.layout` in `hyprland.lua`:
+
+| Bind | Action |
+|---|---|
+| `SUPER + Comma` / `SUPER + Period` | Focus column left / right (scrolls into view) |
+| `SUPER + J` / `SUPER + K` | Focus window down / up within the current column |
+| `SUPER + Shift + Comma` / `SUPER + Shift + Period` | Swap current column left / right |
+| `SUPER + Minus` / `SUPER + Equal` | Shrink / grow current column width |
+
+### Touchpad gestures (`gestures.lua`)
+
+Two-finger vertical swipe is left unbound on purpose — with nothing
+claiming it, it's plain libinput two-finger scroll. Scroll speed itself is
+tuned down from Hyprland's default via `input.touchpad.scroll_factor`
+(`hyprland.lua`, `0.3`).
+
+| Gesture | Action |
+|---|---|
+| 2-finger left/right | Pan the scrolling-layout tape (native `scroll_move`) |
+| 2-finger pinch (any angle) | Resize focused window — spread to grow, pinch to shrink |
+| 3-finger left/right | Cycle workspaces (same wraparound logic as `SUPER + Left/Right`, auto-detects the focused monitor) |
+| 3-finger up | Fullscreen |
+| 3-finger down | Float |
 
 ### xray-instance.sh (Xray-core VPN tunnel)
 
@@ -423,3 +448,11 @@ SDDM themes — not part of the automated setup, run manually:
 ./qylock-sddm.sh list             # list themes, marking installed/current
 ./qylock-sddm.sh install <theme>  # download (if needed) and activate
 ```
+
+`packages` installs qylock's runtime deps (Qt6 declarative/svg/multimedia +
+GStreamer plugins) unconditionally, so any theme installs and renders
+without a separate dependency hunt. Per-theme fonts are a separate,
+deliberately-manual step: several qylock themes bundle third-party game
+fonts under their own `themes/<theme>/font/` that qylock itself doesn't
+redistribute (licensing) — `qylock-sddm.sh install` prints where to drop
+them after installing.
