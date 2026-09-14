@@ -3,32 +3,26 @@ local programs     = variables.programs
 local mainMod      = variables.mainMod
 local launchPrefix = variables.launchPrefix
 
-hl.bind(mainMod .. " + p", hl.dsp.exec_cmd("qs ipc call powermenu toggle"))
-hl.bind(mainMod .. " + v", hl.dsp.exec_cmd("qs ipc call clipboard toggle"))
-hl.bind(mainMod .. " + backspace", hl.dsp.exec_cmd(launchPrefix .. programs.terminal))
-hl.bind(mainMod .. " + t", hl.dsp.exec_cmd("qs ipc call thememenu toggle"))
-hl.bind(mainMod .. " + grave", hl.dsp.exec_cmd("qs ipc call topbar toggle && qs ipc call dock toggle"))
-hl.bind(mainMod .. " + n", hl.dsp.exec_cmd("qs ipc call settings open"))
-hl.bind(mainMod .. " + i", hl.dsp.exec_cmd("qs ipc call panel toggle"))
-hl.bind("PRINT", hl.dsp.exec_cmd('grim -g "$(slurp)" - | tee ~/screenshot_$(date +%Y%m%d_%H%M%S).png | wl-copy'))
-hl.bind(mainMod .. " + space", hl.dsp.exec_cmd(launchPrefix .. programs.menu))
-hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd(launchPrefix .. programs.terminal .. " -e btop"))
-hl.bind(mainMod .. " + s", hl.dsp.exec_cmd('grim -g "$(slurp)" - | tee ~/screenshot_$(date +%Y%m%d_%H%M%S).png | wl-copy'))
-hl.bind(mainMod .. " + e", hl.dsp.exec_cmd(launchPrefix .. programs.fileManager))
-hl.bind(mainMod .. " + escape", hl.dsp.exec_cmd("hyprctl reload"))
--- DMS's own wallpaper picker (dash's wallpaper tab): browses ~/walls,
--- picking a wallpaper also drives matugen theming (currentTheme: dynamic).
-hl.bind(mainMod .. " + w", hl.dsp.exec_cmd("qs ipc call dash toggle wallpaper"))
--- DMS's built-in lock screen (Modules/Lock); hyprlock retired, see sub-project 6.
-hl.bind(mainMod .. " + l", hl.dsp.exec_cmd("qs ipc call lock lock"))
 
+-- ================================ --
+--      APPS & LAUNCHERS            --
+-- ================================ --
+hl.bind(mainMod .. " + backspace", hl.dsp.exec_cmd(launchPrefix .. programs.terminal))
+hl.bind(mainMod .. " + space", hl.dsp.exec_cmd(launchPrefix .. programs.menu))
+hl.bind(mainMod .. " + e", hl.dsp.exec_cmd(launchPrefix .. programs.fileManager))
+-- Windows' own Task Manager shortcut, repurposed the same way here.
+hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd(launchPrefix .. programs.terminal .. " -e btop"))
+
+
+-- ================================ --
+--      WINDOW MANAGEMENT           --
+-- ================================ --
 hl.bind(mainMod .. " + c", hl.dsp.window.close())
 hl.bind(mainMod .. " + q", hl.dsp.window.close())
 hl.bind(mainMod .. " + ALT + space", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + d", hl.dsp.window.fullscreen({ mode = 1 }))
 hl.bind(mainMod .. " + f", hl.dsp.window.fullscreen())
+hl.bind(mainMod .. " + m", hl.dsp.window.fullscreen({ mode = 1 })) -- maximize (keeps bar/borders)
 hl.bind(mainMod .. " + b", hl.dsp.window.pseudo())
-hl.bind(mainMod .. " + j", hl.dsp.layout("togglesplit"))
 hl.bind("ALT + tab", function()
     hl.dispatch(hl.dsp.window.cycle_next())
     hl.dispatch(hl.dsp.window.bring_to_top())
@@ -43,11 +37,15 @@ hl.bind(mainMod .. " + CONTROL + mouse_down", hl.dsp.window.resize({ x = 0, y = 
 hl.bind(mainMod .. " + CONTROL + mouse_up", hl.dsp.window.resize({ x = 0, y = 100, relative = true }))
 
 
+-- ================================ --
+--          WORKSPACES              --
+-- ================================ --
 -- Numeric wraparound workspace cycling (1-2-3-4-1), even through empty
 -- workspaces -- Hyprland's built-in +1/-1 is occupancy-aware, which isn't
 -- what we want here. Monitor names/ranges match rules.lua's workspace_rule
 -- assignment (MONITOR1 -> 1-4, MONITOR2 -> 5-8); update both when the real
--- second monitor's output name is known on a new host.
+-- second monitor's output name is known on a new host. gestures.lua's
+-- touchpad workspace swipe reuses this same script in --auto mode.
 local cycleWs = "~/.config/hypr/scripts/cycle-workspace.sh"
 
 hl.bind(mainMod .. " + right", hl.dsp.exec_cmd(cycleWs .. " " .. variables.monitor1 .. " 1 4 +1"))
@@ -58,6 +56,43 @@ hl.bind(mainMod .. " + ALT + left", hl.dsp.exec_cmd(cycleWs .. " " .. variables.
 for i = 1, 8 do
     hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }))
 end
+
+
+-- ================================ --
+--       SCROLLING LAYOUT           --
+-- ================================ --
+-- Niri-style column navigation (hyprland.lua sets general.layout =
+-- "scrolling", Hyprland's own native layout -- no plugin). h/l are already
+-- taken by tasking.lua's hyprtasking overview panning, so column
+-- focus/move lives on comma/period instead; j/k cover in-column vertical
+-- focus (a column can stack more than one window).
+hl.bind(mainMod .. " + comma",          hl.dsp.layout("focus l"))
+hl.bind(mainMod .. " + period",         hl.dsp.layout("focus r"))
+hl.bind(mainMod .. " + j",              hl.dsp.layout("focus d"))
+hl.bind(mainMod .. " + k",              hl.dsp.layout("focus u"))
+hl.bind(mainMod .. " + SHIFT + comma",  hl.dsp.layout("swapcol l"))
+hl.bind(mainMod .. " + SHIFT + period", hl.dsp.layout("swapcol r"))
+hl.bind(mainMod .. " + minus",          hl.dsp.layout("colresize -0.1"))
+hl.bind(mainMod .. " + equal",          hl.dsp.layout("colresize +0.1"))
+
+
+-- ================================ --
+--          SYSTEM / UI             --
+-- ================================ --
+hl.bind(mainMod .. " + p", hl.dsp.exec_cmd("qs ipc call powermenu toggle"))
+hl.bind(mainMod .. " + v", hl.dsp.exec_cmd("qs ipc call clipboard toggle"))
+hl.bind(mainMod .. " + t", hl.dsp.exec_cmd("qs ipc call thememenu toggle"))
+hl.bind(mainMod .. " + grave", hl.dsp.exec_cmd("qs ipc call topbar toggle && qs ipc call dock toggle"))
+hl.bind(mainMod .. " + n", hl.dsp.exec_cmd("qs ipc call settings open"))
+hl.bind(mainMod .. " + i", hl.dsp.exec_cmd("qs ipc call panel toggle"))
+-- DMS's own wallpaper picker (dash's wallpaper tab): browses ~/walls,
+-- picking a wallpaper also drives matugen theming (currentTheme: dynamic).
+hl.bind(mainMod .. " + w", hl.dsp.exec_cmd("qs ipc call dash toggle wallpaper"))
+-- DMS's built-in lock screen (Modules/Lock); hyprlock retired, see sub-project 6.
+hl.bind(mainMod .. " + l", hl.dsp.exec_cmd("qs ipc call lock lock"))
+hl.bind(mainMod .. " + escape", hl.dsp.exec_cmd("hyprctl reload"))
+hl.bind("PRINT", hl.dsp.exec_cmd('grim -g "$(slurp)" - | tee ~/screenshot_$(date +%Y%m%d_%H%M%S).png | wl-copy'))
+hl.bind(mainMod .. " + s", hl.dsp.exec_cmd('grim -g "$(slurp)" - | tee ~/screenshot_$(date +%Y%m%d_%H%M%S).png | wl-copy'))
 
 
 -- ================================ --
