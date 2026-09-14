@@ -1,37 +1,9 @@
-# 25-defaults.sh — remove unwanted default packages, set app defaults,
-# enable services.
-
-# Some pre-existing DE installs ship packages we don't want (e.g. Dolphin, a
-# KDE app that ignores the freedesktop color-scheme so it can't follow the
-# light/dark theme switch). A no-op on the fresh "no desktop" CachyOS path
-# this repo otherwise targets -- nothing here was ever installed to begin
-# with -- but harmless, and still useful re-running this on top of an
-# existing DE install.
-
-# Removed if present (safe to list packages that may not be installed).
-REMOVE_PACKAGES=(
-    dolphin
-)
-
-setup_remove() {
-    info "Removing unwanted default packages"
-    local pkg present=()
-    for pkg in "${REMOVE_PACKAGES[@]}"; do
-        pacman -Qq "$pkg" &>/dev/null && present+=("$pkg")
-    done
-    if ((${#present[@]})); then
-        sudo pacman -Rns --noconfirm "${present[@]}"
-        ok "Removed: ${present[*]}"
-    else
-        warn "No listed packages present to remove"
-    fi
-}
+# 25-defaults.sh — set app defaults, enable services.
 
 setup_defaults() {
     info "Setting default apps and enabling services"
 
-    # Nautilus as the default file manager (replaces Dolphin/whatever else
-    # for opening folders).
+    # Nautilus as the default file manager.
     if command -v xdg-mime &>/dev/null; then
         xdg-mime default org.gnome.Nautilus.desktop inode/directory
         ok "Default file manager set to Nautilus"
