@@ -14,6 +14,9 @@ PACMAN_PACKAGES=(
     playerctl
     brightnessctl
     hyprland
+    hyprpm              # split out of the hyprland package as of 0.56.2-3;
+                        # autostart.lua's `hyprpm reload -n` and hyprtasking
+                        # (extras) need the binary
     kitty
     sddm
     quickshell
