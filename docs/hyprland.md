@@ -63,19 +63,19 @@ left), `SUPER + Shift + Comma` / `SUPER + Shift + Period` (move window left
 
 ## Touchpad gestures (`gestures.lua`)
 
-Two-finger vertical swipe is left unbound on purpose — with nothing
-claiming it, it's plain libinput two-finger scroll. Scroll speed itself is
-tuned down from Hyprland's default via `input.touchpad.scroll_factor`
-(`hyprland.lua`, `0.3`). 2-finger horizontal is unbound for the same
-reason a gesture binding never worked there: libinput requires 3+ fingers
-for a swipe gesture, 2 fingers only ever report as scroll or pinch.
+Only one gesture is bound, deliberately — 3-finger up/down (fullscreen/
+float) and 2-finger pinch (resize) were tried and dropped: libinput's own
+debug-events confirmed the touchpad reported all of them cleanly, but
+`hl.gesture()`'s bare string actions (`"fullscreen"`/`"float"`/`"resize"`)
+never actually fired despite being schema-valid (`hl.dsp.*` dispatcher
+objects aren't accepted there either — tried, Hyprland rejected the config
+outright with a type error). Not worth chasing further for now. Everything
+else — 2-finger scroll (including horizontal), pinch-to-zoom in apps that
+support it — is left fully unclaimed, so libinput's own defaults handle it.
 
 | Gesture | Action |
 |---|---|
-| 2-finger pinch (any angle) | Resize focused window — spread to grow, pinch to shrink |
 | 3-finger left/right | Cycle workspaces (same wraparound logic as `SUPER + Left/Right`, auto-detects the focused monitor) |
-| 3-finger up | Fullscreen |
-| 3-finger down | Float |
 
 ## xray-instance.sh (Xray-core VPN tunnel)
 
