@@ -73,6 +73,7 @@ PACMAN_PACKAGES=(
 )
 
 AUR_PACKAGES=(
+    google-chrome        # .config/chrome-flags.conf: native Wayland + middle-click autoscroll
     hyprqt6engine
     hyprmod
     nautilus-open-any-terminal  # "Open Terminal Here" -> kitty

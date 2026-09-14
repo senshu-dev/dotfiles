@@ -92,6 +92,23 @@ StartupNotify=true
 Categories=Network;WebBrowser;
 MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;
 DESKTOP
+    # Windows-style middle-click autoscroll: general.autoScroll isn't always
+    # on by default. A distribution policy applies to every profile
+    # (including ones that don't exist yet) instead of needing to locate the
+    # profile's own randomly-named directory.
+    sudo mkdir -p /opt/zen/distribution
+    sudo tee /opt/zen/distribution/policies.json >/dev/null <<'POLICIES'
+{
+    "policies": {
+        "Preferences": {
+            "general.autoScroll": {
+                "Value": true,
+                "Status": "default"
+            }
+        }
+    }
+}
+POLICIES
     rm -rf "$tmp"
     ok "zen installed"
 }
