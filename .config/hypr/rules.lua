@@ -51,6 +51,15 @@ hl.window_rule({
     opacity = "1.0 override 1.0 override",
 })
 
+hl.window_rule({
+    -- btop's panels need real width to render -- min_size is float-only, so
+    -- under the scrolling layout this is the native equivalent (starting
+    -- column width, not a hard floor: colresize can still shrink it later).
+    name            = "btop-width",
+    match           = { class = "^kitty-btop$" },
+    scrolling_width = 0.6,
+})
+
 local variables = require('variables')
 local MONITOR1 = variables.monitor1
 local MONITOR2 = variables.monitor2

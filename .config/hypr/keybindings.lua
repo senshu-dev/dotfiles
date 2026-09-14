@@ -11,7 +11,10 @@ hl.bind(mainMod .. " + backspace", hl.dsp.exec_cmd(launchPrefix .. programs.term
 hl.bind(mainMod .. " + space", hl.dsp.exec_cmd(launchPrefix .. programs.menu))
 hl.bind(mainMod .. " + e", hl.dsp.exec_cmd(launchPrefix .. programs.fileManager))
 -- Windows' own Task Manager shortcut, repurposed the same way here.
-hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd(launchPrefix .. programs.terminal .. " -e btop"))
+-- --class gives this kitty instance its own app_id (kitty-btop, distinct
+-- from plain "kitty") so rules.lua can size it without touching every
+-- other kitty window.
+hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd(launchPrefix .. programs.terminal .. " --class kitty-btop -e btop"))
 
 
 -- ================================ --
@@ -62,18 +65,17 @@ end
 --       SCROLLING LAYOUT           --
 -- ================================ --
 -- Niri-style column navigation (hyprland.lua sets general.layout =
--- "scrolling", Hyprland's own native layout -- no plugin). h/l are already
--- taken by tasking.lua's hyprtasking overview panning, so column
--- focus/move lives on comma/period instead; j/k cover in-column vertical
--- focus (a column can stack more than one window).
-hl.bind(mainMod .. " + comma",          hl.dsp.layout("focus l"))
-hl.bind(mainMod .. " + period",         hl.dsp.layout("focus r"))
-hl.bind(mainMod .. " + j",              hl.dsp.layout("focus d"))
-hl.bind(mainMod .. " + k",              hl.dsp.layout("focus u"))
-hl.bind(mainMod .. " + SHIFT + comma",  hl.dsp.layout("swapcol l"))
-hl.bind(mainMod .. " + SHIFT + period", hl.dsp.layout("swapcol r"))
-hl.bind(mainMod .. " + minus",          hl.dsp.layout("colresize -0.1"))
-hl.bind(mainMod .. " + equal",          hl.dsp.layout("colresize +0.1"))
+-- "scrolling", Hyprland's own native layout -- no plugin). h/l/j/k are the
+-- vim-directional set; tasking.lua's hyprtasking overview panning moved to
+-- comma/period to make room (see tasking.lua).
+hl.bind(mainMod .. " + h",         hl.dsp.layout("focus l"))
+hl.bind(mainMod .. " + l",         hl.dsp.layout("focus r"))
+hl.bind(mainMod .. " + j",         hl.dsp.layout("focus d"))
+hl.bind(mainMod .. " + k",         hl.dsp.layout("focus u"))
+hl.bind(mainMod .. " + SHIFT + h", hl.dsp.layout("swapcol l"))
+hl.bind(mainMod .. " + SHIFT + l", hl.dsp.layout("swapcol r"))
+hl.bind(mainMod .. " + minus",     hl.dsp.layout("colresize -0.1"))
+hl.bind(mainMod .. " + equal",     hl.dsp.layout("colresize +0.1"))
 
 
 -- ================================ --
@@ -89,7 +91,9 @@ hl.bind(mainMod .. " + i", hl.dsp.exec_cmd("qs ipc call panel toggle"))
 -- picking a wallpaper also drives matugen theming (currentTheme: dynamic).
 hl.bind(mainMod .. " + w", hl.dsp.exec_cmd("qs ipc call dash toggle wallpaper"))
 -- DMS's built-in lock screen (Modules/Lock); hyprlock retired, see sub-project 6.
-hl.bind(mainMod .. " + l", hl.dsp.exec_cmd("qs ipc call lock lock"))
+-- Off SUPER+L (now scrolling-layout column focus) onto the classic
+-- Linux-DE lock convention instead, out of the SUPER namespace entirely.
+hl.bind("CTRL + ALT + l", hl.dsp.exec_cmd("qs ipc call lock lock"))
 hl.bind(mainMod .. " + escape", hl.dsp.exec_cmd("hyprctl reload"))
 hl.bind("PRINT", hl.dsp.exec_cmd('grim -g "$(slurp)" - | tee ~/screenshot_$(date +%Y%m%d_%H%M%S).png | wl-copy'))
 hl.bind(mainMod .. " + s", hl.dsp.exec_cmd('grim -g "$(slurp)" - | tee ~/screenshot_$(date +%Y%m%d_%H%M%S).png | wl-copy'))
