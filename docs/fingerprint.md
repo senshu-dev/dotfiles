@@ -40,15 +40,28 @@ fprintd-verify $USER
 ## Using it for login/sudo/unlock
 
 `./setup.sh fingerprint` also wires `pam_fprintd.so` into
-`/etc/pam.d/system-auth` (as `auth sufficient`, first line, ahead of
-`pam_unix`) — every PAM service that includes it picks it up for free:
-SDDM login, `sudo`, screen unlock. Idempotent, safe to re-run.
+`/etc/pam.d/system-auth` (as `auth sufficient timeout=10`, first line,
+ahead of `pam_unix`) — every PAM service that includes it picks it up for
+free: SDDM login, `sudo`, screen unlock. Idempotent, safe to re-run.
 
-Once a finger is enrolled (see above — has to happen locally, not over
-SSH), just touch the sensor at the SDDM password prompt instead of typing
-— `pam_fprintd` is tried first and short-circuits the password step on a
-match. The current greeter theme (`R1999_1`) doesn't render a "place your
-finger" message, but the touch still authenticates.
+**PAM auth is serialized, not parallel** (`man pam_fprintd`'s own
+LIMITATIONS section): the whole login blocks on `pam_fprintd` *first*,
+before `pam_unix` ever looks at what you typed. So:
+
+- **Touch the sensor right when you submit the login** (hit Enter /
+  click the login button), not before and not after — that's the only
+  window `pam_fprintd` is actually listening in. The greeter does
+  receive and can show the "Положите палец…" prompt (confirmed live via
+  `journalctl`: `sddm` → `Authentication information` → forwarded to
+  the greeter), whether the current theme (`R1999_1`) renders it
+  visibly or not.
+- **If you don't touch it in time**, `pam_fprintd` runs out its
+  `timeout=10` and only then falls through to check the password you
+  already typed — so a login with no finger touch always has a ~10s
+  pause built in before the password takes effect. That's expected, not
+  broken (it was worse before this was tuned down from `pam_fprintd`'s
+  own 30s default, which is what made an ordinary password login feel
+  like it had hung).
 
 ## GUI
 
