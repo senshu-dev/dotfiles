@@ -67,7 +67,6 @@ git clone https://github.com/senshu-dev/dotfiles.git && cd dotfiles
 | `mirrors` | Rank both the Arch and CachyOS mirrorlists (`cachyos-rate-mirrors`) |
 | `update` | `pacman -Syyu` |
 | `packages` | Install pacman + AUR packages (Hyprland, SDDM, kitty, Quickshell, nautilus, bluez, ...) |
-| `remove` | Remove unwanted defaults (Dolphin) — a no-op on a fresh install, still useful re-running on top of an existing DE |
 | `defaults` | Set Nautilus/imv/kitty as default file manager/image viewer/terminal, enable `sddm.service` |
 | `shell` | Install zsh + oh-my-zsh, set as default shell |
 | `config` | Copy `.config/` into `~/.config/` |
