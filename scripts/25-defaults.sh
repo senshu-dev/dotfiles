@@ -1,9 +1,12 @@
-# 25-remove.sh — remove unwanted default packages and set app defaults.
-#
-# Some packages ship with the base OS install that we don't want (e.g. Dolphin,
-# a KDE app that ignores the freedesktop color-scheme so it can't follow the
-# light/dark theme switch). We drop those and make Nautilus the file manager,
-# which is libadwaita and does follow the variant.
+# 25-defaults.sh — remove unwanted default packages, set app defaults,
+# enable services.
+
+# Some pre-existing DE installs ship packages we don't want (e.g. Dolphin, a
+# KDE app that ignores the freedesktop color-scheme so it can't follow the
+# light/dark theme switch). A no-op on the fresh "no desktop" CachyOS path
+# this repo otherwise targets -- nothing here was ever installed to begin
+# with -- but harmless, and still useful re-running this on top of an
+# existing DE install.
 
 # Removed if present (safe to list packages that may not be installed).
 REMOVE_PACKAGES=(
@@ -22,8 +25,13 @@ setup_remove() {
     else
         warn "No listed packages present to remove"
     fi
+}
 
-    # Nautilus as the default file manager (replaces Dolphin for opening folders).
+setup_defaults() {
+    info "Setting default apps and enabling services"
+
+    # Nautilus as the default file manager (replaces Dolphin/whatever else
+    # for opening folders).
     if command -v xdg-mime &>/dev/null; then
         xdg-mime default org.gnome.Nautilus.desktop inode/directory
         ok "Default file manager set to Nautilus"
@@ -43,4 +51,9 @@ setup_remove() {
         gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal kitty
         ok "Nautilus 'Open Terminal Here' set to kitty"
     fi
+
+    # Fresh installs have no display manager enabled at all; idempotent on
+    # hosts that already have it enabled.
+    sudo systemctl enable sddm.service
+    ok "sddm.service enabled"
 }

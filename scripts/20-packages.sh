@@ -90,9 +90,6 @@ AUR_PACKAGES=(
 setup_pacman_packages() {
     info "Installing packages with pacman"
     sudo pacman -S --noconfirm "${PACMAN_PACKAGES[@]}"
-    # Fresh installs have no display manager enabled at all; idempotent on
-    # hosts that already have it enabled.
-    sudo systemctl enable sddm.service
     ok "Packages installed"
 }
 
