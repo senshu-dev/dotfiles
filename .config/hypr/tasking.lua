@@ -27,9 +27,11 @@ end, { non_consuming = true })
 
 hl.bind(mainMod .. " + x", function() hl.plugin.hyprtasking.killhovered() end)
 
-hl.bind(mainMod .. " + h",         function() hl.plugin.hyprtasking.move("left") end)
-hl.bind(mainMod .. " + SHIFT + h", function() hl.plugin.hyprtasking.movewindow("left") end)
-hl.bind(mainMod .. " + SHIFT + l", function() hl.plugin.hyprtasking.movewindow("right") end)
+-- h/l moved to keybindings.lua's scrolling-layout column focus; comma/period
+-- take over the overview-pan slot (same left/right pairing, just relocated).
+hl.bind(mainMod .. " + comma",          function() hl.plugin.hyprtasking.move("left") end)
+hl.bind(mainMod .. " + SHIFT + comma",  function() hl.plugin.hyprtasking.movewindow("left") end)
+hl.bind(mainMod .. " + SHIFT + period", function() hl.plugin.hyprtasking.movewindow("right") end)
 
 hl.config({
     plugin = {
