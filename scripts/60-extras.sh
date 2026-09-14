@@ -16,6 +16,7 @@ EXTRAS=(
     hyprtasking
     wallpapers
     yc
+    office
 )
 
 setup_extras() {
@@ -145,6 +146,22 @@ setup_k9s() {
     info "Installing k9s"
     yay -S --noconfirm k9s
     ok "k9s installed"
+}
+
+# LibreOffice + the companion packages that matter in practice: spellcheck
+# dictionaries matching hyprland.lua's kb_layout ("us,ru"), MS-metric-
+# compatible fonts so Word/Excel docs don't reflow, and a PDF viewer
+# (evince: GTK/libadwaita, follows the color-scheme like Nautilus does --
+# see 25-remove.sh -- rather than a Qt one that wouldn't).
+setup_office() {
+    info "Installing LibreOffice + office companion packages"
+    sudo pacman -S --needed --noconfirm \
+        libreoffice-fresh \
+        hunspell-en_us \
+        hunspell-ru \
+        ttf-liberation \
+        evince
+    ok "Office packages installed"
 }
 
 # Requires the CachyOS repos in pacman.conf (https://wiki.cachyos.org/cachyos_repo/) --
