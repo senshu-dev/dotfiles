@@ -29,9 +29,13 @@ hl.gesture({ fingers = 3, direction = "right", action = cycleWorkspaceAuto("+1")
 hl.gesture({ fingers = 3, direction = "up",   action = "fullscreen" })
 hl.gesture({ fingers = 3, direction = "down", action = "float" })
 
--- 2-finger left/right: pan the scrolling-layout tape (native action,
--- niri-style column scroll).
-hl.gesture({ fingers = 2, direction = "horizontal", action = "scroll_move" })
+-- 2-finger horizontal swipe was bound here for tape-panning but never
+-- fires: confirmed against libinput's own docs (wayland.freedesktop.org/
+-- libinput, Gestures) -- swipe gestures require 3+ fingers by design, 2
+-- fingers only ever report as scroll or pinch. Removed rather than left
+-- as dead config. If tape-panning by touchpad is still wanted, it needs a
+-- different finger count (3 left/right is already workspace-cycle above)
+-- or a plain 2-finger horizontal *scroll* binding instead of a gesture.
 
 -- 2-finger pinch (any direction, spread or diagonal -- pinch is just the
 -- change in distance between the two contact points, angle doesn't
