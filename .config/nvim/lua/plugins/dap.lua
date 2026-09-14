@@ -26,32 +26,5 @@ return {
 		dap.listeners.after.event_initialized["dapui_config"] = dapui.open
 		dap.listeners.before.event_terminated["dapui_config"] = dapui.close
 		dap.listeners.before.event_exited["dapui_config"] = dapui.close
-
-		-- Bash debugging has no mason.nvim-installed "bash-debug-adapter"
-		-- on this host (this repo never uses mason - see lsp.lua), so it's
-		-- wired by hand against the AUR vscode-bash-debug package, which
-		-- drives the bashdb CLI.
-		dap.adapters.sh = {
-			type = "executable",
-			command = "vscode-bash-debug",
-			args = {},
-		}
-		dap.configurations.sh = {
-			{
-				type = "sh",
-				request = "launch",
-				name = "Launch bash script",
-				program = "${file}",
-				cwd = "${workspaceFolder}",
-				pathBashdb = vim.fn.exepath("bashdb"),
-				pathBash = "/bin/bash",
-				pathCat = "cat",
-				pathMkfifo = "mkfifo",
-				pathPkill = "pkill",
-				args = {},
-				env = {},
-				terminalKind = "integrated",
-			},
-		}
 	end,
 }
