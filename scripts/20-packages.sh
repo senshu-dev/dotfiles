@@ -2,6 +2,9 @@
 
 # Packages installed with pacman (one per line makes diffs clean).
 PACMAN_PACKAGES=(
+    base-devel          # fakeroot/gcc/patch/... -- makepkg ships with pacman itself, but
+                        # actually building anything (yay, AUR_PACKAGES below) needs this
+                        # group too, and a fresh no-package CachyOS install doesn't have it
     zsh
     zip
     unzip
@@ -10,6 +13,9 @@ PACMAN_PACKAGES=(
     make
     playerctl
     brightnessctl
+    hyprland
+    kitty
+    sddm
     quickshell
     slurp
     cliphist
@@ -39,6 +45,14 @@ PACMAN_PACKAGES=(
     bluez-utils        # bluetoothctl (CLI), bluetuith's backend
     matugen            # wallpaper -> Material You palette; dms shells out to it directly
     adw-gtk-theme      # adw-gtk3/adw-gtk3-dark; dms flips gtk-theme via gsettings on theme change
+    qt6-declarative    # qylock-sddm.sh: Qt6 SDDM themes (most qylock themes)
+    qt6-svg            # qylock-sddm.sh: Qt6 SDDM themes, SVG assets
+    qt6-multimedia          # qylock-sddm.sh: themes with video backgrounds
+    qt6-multimedia-ffmpeg   # qylock-sddm.sh: ffmpeg backend for qt6-multimedia
+    gst-plugins-base   # qylock-sddm.sh: video playback backend
+    gst-plugins-good   # qylock-sddm.sh: video playback backend
+    gst-plugins-bad    # qylock-sddm.sh: video playback backend
+    gst-plugins-ugly   # qylock-sddm.sh: video playback backend
     neovim             # tracked for reproducibility; already on this host
     sshfs              # nvim remote workflow: mount remote dirs, edit with full local LSP
     ripgrep            # telescope live_grep backend
@@ -76,6 +90,9 @@ AUR_PACKAGES=(
 setup_pacman_packages() {
     info "Installing packages with pacman"
     sudo pacman -S --noconfirm "${PACMAN_PACKAGES[@]}"
+    # Fresh installs have no display manager enabled at all; idempotent on
+    # hosts that already have it enabled.
+    sudo systemctl enable sddm.service
     ok "Packages installed"
 }
 
