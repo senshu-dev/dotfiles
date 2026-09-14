@@ -1,10 +1,13 @@
 -- gestures.lua — touchpad gesture bindings.
 --
--- fingers x direction disambiguates each swipe; pinch is its own gesture
--- type (finger-distance change), so it never collides with the swipes
--- below. Plain two-finger vertical scrolling isn't bound here at all --
--- with no hl.gesture claiming it, libinput's own two-finger scroll
--- handles it, which is exactly the "just let me scroll" behaviour.
+-- Only 3-finger left/right is bound. Everything else that was tried here
+-- (3-finger up/down for fullscreen/float, 2-finger pinch for resize) never
+-- fired -- confirmed live via libinput debug-events that the touchpad and
+-- libinput were reporting those gestures cleanly, so the gap was in
+-- hl.gesture()'s own handling of non-workspace string actions, not
+-- hardware. Not worth chasing further; dropped instead. Plain two-finger
+-- scrolling and pinch are left fully unclaimed, so libinput's own
+-- scroll/pinch-to-zoom (where an app supports it) still works normally.
 
 local variables = require('variables')
 local cycleWs = "~/.config/hypr/scripts/cycle-workspace.sh"
@@ -23,23 +26,3 @@ end
 
 hl.gesture({ fingers = 3, direction = "left",  action = cycleWorkspaceAuto("-1") })
 hl.gesture({ fingers = 3, direction = "right", action = cycleWorkspaceAuto("+1") })
-
--- 3-finger up/down: fullscreen / float (moved off 2-finger so plain
--- two-finger vertical stays a normal scroll).
-hl.gesture({ fingers = 3, direction = "up",   action = "fullscreen" })
-hl.gesture({ fingers = 3, direction = "down", action = "float" })
-
--- 2-finger horizontal swipe was bound here for tape-panning but never
--- fires: confirmed against libinput's own docs (wayland.freedesktop.org/
--- libinput, Gestures) -- swipe gestures require 3+ fingers by design, 2
--- fingers only ever report as scroll or pinch. Removed rather than left
--- as dead config. If tape-panning by touchpad is still wanted, it needs a
--- different finger count (3 left/right is already workspace-cycle above)
--- or a plain 2-finger horizontal *scroll* binding instead of a gesture.
-
--- 2-finger pinch (any direction, spread or diagonal -- pinch is just the
--- change in distance between the two contact points, angle doesn't
--- matter): resize the focused window, spreading grows it, pinching
--- shrinks it. Native `resize` action -- free resize on floating windows,
--- adjusts split/column size on tiled/scrolling ones.
-hl.gesture({ fingers = 2, direction = "pinch", action = "resize" })
