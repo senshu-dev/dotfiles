@@ -66,11 +66,12 @@ left), `SUPER + Shift + Comma` / `SUPER + Shift + Period` (move window left
 Two-finger vertical swipe is left unbound on purpose — with nothing
 claiming it, it's plain libinput two-finger scroll. Scroll speed itself is
 tuned down from Hyprland's default via `input.touchpad.scroll_factor`
-(`hyprland.lua`, `0.3`).
+(`hyprland.lua`, `0.3`). 2-finger horizontal is unbound for the same
+reason a gesture binding never worked there: libinput requires 3+ fingers
+for a swipe gesture, 2 fingers only ever report as scroll or pinch.
 
 | Gesture | Action |
 |---|---|
-| 2-finger left/right | Pan the scrolling-layout tape (native `scroll_move`) |
 | 2-finger pinch (any angle) | Resize focused window — spread to grow, pinch to shrink |
 | 3-finger left/right | Cycle workspaces (same wraparound logic as `SUPER + Left/Right`, auto-detects the focused monitor) |
 | 3-finger up | Fullscreen |
