@@ -69,7 +69,6 @@ PACMAN_PACKAGES=(
     shfmt               # nvim format-on-save: Bash (conform.nvim)
     delve               # nvim DAP: Go debugger backend (nvim-dap-go)
     python-debugpy      # nvim DAP: Python debugger backend (nvim-dap-python)
-    bun                 # runtime for the vscode-bash-debug adapter (AUR)
 )
 
 AUR_PACKAGES=(
@@ -82,8 +81,6 @@ AUR_PACKAGES=(
     terminal-rain-lightning
     terraform-ls        # nvim LSP: Terraform
     helm-ls              # nvim LSP: Helm
-    bashdb               # nvim DAP: Bash debugger engine, driven by vscode-bash-debug
-    vscode-bash-debug    # nvim DAP: Bash debug adapter (/usr/bin/vscode-bash-debug)
 )
 
 # Sources hosts/<host>/packages.sh (if it exists) for HOST_PACMAN_PACKAGES /
