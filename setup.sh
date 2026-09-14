@@ -43,6 +43,7 @@ STEPS=(
     "defaults|setup_defaults|Set default apps (Nautilus, imv, kitty) and enable sddm.service"
     "shell|setup_shell|Set up zsh and oh-my-zsh"
     "config|setup_config|Copy dotfiles .config (hypr, kitty, quickshell, …) into ~/.config"
+    "fingerprint|setup_fingerprint|Install the Goodix 27c6:5125 fingerprint driver (laptop only)"
     "fonts|setup_fonts|Install the AnnotationMono font"
     "extras|setup_extras|Interactive menu: zen browser, bluetooth, VS Code Insiders, podman, binenv, k9s, gaming meta"
 )

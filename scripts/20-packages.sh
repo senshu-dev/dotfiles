@@ -20,8 +20,6 @@ PACMAN_PACKAGES=(
     slurp
     cliphist
     grim
-    wf-recorder        # sidebar recording tile
-    hyprpolkitagent
     xdg-desktop-portal-hyprland
     hyprsunset
     hypridle
@@ -87,6 +85,19 @@ AUR_PACKAGES=(
     vscode-bash-debug    # nvim DAP: Bash debug adapter (/usr/bin/vscode-bash-debug)
 )
 
+# Sources hosts/<host>/packages.sh (if it exists) for HOST_PACMAN_PACKAGES /
+# HOST_AUR_PACKAGES, and appends them to the common lists above.
+load_host_packages() {
+    local scripts_dir host_packages_file
+    scripts_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    host_packages_file="$scripts_dir/../hosts/$(detect_host)/packages.sh"
+    HOST_PACMAN_PACKAGES=()
+    HOST_AUR_PACKAGES=()
+    [[ -f "$host_packages_file" ]] && source "$host_packages_file"
+    PACMAN_PACKAGES+=("${HOST_PACMAN_PACKAGES[@]}")
+    AUR_PACKAGES+=("${HOST_AUR_PACKAGES[@]}")
+}
+
 setup_pacman_packages() {
     info "Installing packages with pacman"
     sudo pacman -S --noconfirm "${PACMAN_PACKAGES[@]}"
@@ -104,6 +115,7 @@ setup_aur_packages() {
 }
 
 setup_packages() {
+    load_host_packages
     setup_pacman_packages
     setup_aur_packages
 }

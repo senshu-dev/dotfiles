@@ -29,18 +29,41 @@ see the symlink note above), launched directly from `~/.config/hypr/autostart.lu
 activates (`Requisite=graphical-session.target` fails every start; a
 pre-existing gap, not something this deploy fixed).
 
-### Rolling back the TopBar/plugins deploy
+**Automated by the `config` step** (`deploy_dank_shell` in
+`scripts/40-config.sh`): it deploys once per machine and then gets out of
+the way. If `~/.config/quickshell/DMSShell.qml` already exists, the step
+skips the copy entirely — DMS persists live settings (theme, dock
+transparency, quick-toggle layout, ...) directly into files under that tree
+(e.g. `Common/SettingsData.qml`), so re-copying on every `setup.sh config`
+rerun would silently wipe them. Anything else found at `~/.config/quickshell`
+first (an old shell, or nothing) gets backed up to
+`~/.config/quickshell-backup-pre-dms-deploy-<timestamp>` before the fresh
+copy goes in.
+
+A **redeploy** (picking up dank-shell submodule changes on a machine that
+already has a live copy) is still a deliberate manual step — the automated
+skip-if-already-deployed check exists specifically so this doesn't happen by
+accident:
+
+```bash
+mv ~/.config/quickshell ~/.config/quickshell-backup-pre-<reason>-$(date +%Y%m%d-%H%M%S)
+cp -r ~/dotfiles/.config/dank-shell/quickshell ~/.config/quickshell
+rm -rf ~/.config/dank-qml-common
+cp -r ~/dotfiles/.config/dank-shell/dank-qml-common ~/.config/dank-qml-common
+```
+
+### Rolling back a deploy
 
 If the deployed shell misbehaves, restore the pre-deploy backup:
 
 ```bash
 pkill -f 'dms run --config'   # or: kill the PID from `pgrep -f "dms run --config"`
-rm -rf ~/.config/quickshell
-mv ~/.config/quickshell-backup-pre-topbar-plugins-<timestamp> ~/.config/quickshell
+rm -rf ~/.config/quickshell ~/.config/dank-qml-common
+mv ~/.config/quickshell-backup-pre-<reason>-<timestamp> ~/.config/quickshell
 ```
 
-Replace `<timestamp>` with the actual backup directory name
-(`ls ~/.config | grep quickshell-backup-pre-topbar-plugins`). Also revert
+Replace `<reason>-<timestamp>` with the actual backup directory name
+(`ls ~/.config | grep quickshell-backup-pre`). Also revert
 `~/.config/hypr/autostart.lua`'s `dms run` line back to `quickshell` (or
 `git checkout` that file to the pre-deploy commit) and re-run
 `hyprctl reload` / restart Hyprland so the old shell relaunches on next
