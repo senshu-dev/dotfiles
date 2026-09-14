@@ -53,6 +53,8 @@ tape of columns), set via `general.layout` in `hyprland.lua`:
 | `SUPER + H` / `SUPER + L` | Focus column left / right (scrolls into view) |
 | `SUPER + J` / `SUPER + K` | Focus window down / up within the current column |
 | `SUPER + Shift + H` / `SUPER + Shift + L` | Swap current column left / right |
+| `SUPER + Shift + J` | Stack focused window into the previous column |
+| `SUPER + Shift + K` | Pop focused window out into its own column |
 | `SUPER + Minus` / `SUPER + Equal` | Shrink / grow current column width |
 
 Hyprtasking's overview panning (`tasking.lua`) uses `SUPER + Comma` (pan

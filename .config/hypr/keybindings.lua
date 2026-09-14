@@ -74,6 +74,10 @@ hl.bind(mainMod .. " + j",         hl.dsp.layout("focus d"))
 hl.bind(mainMod .. " + k",         hl.dsp.layout("focus u"))
 hl.bind(mainMod .. " + SHIFT + h", hl.dsp.layout("swapcol l"))
 hl.bind(mainMod .. " + SHIFT + l", hl.dsp.layout("swapcol r"))
+-- Stack/unstack within a column, keyboard-only equivalent of dragging a
+-- window onto another one.
+hl.bind(mainMod .. " + SHIFT + j", hl.dsp.layout("consume")) -- pull into the previous column
+hl.bind(mainMod .. " + SHIFT + k", hl.dsp.layout("expel"))   -- pop out into its own column
 hl.bind(mainMod .. " + minus",     hl.dsp.layout("colresize -0.1"))
 hl.bind(mainMod .. " + equal",     hl.dsp.layout("colresize +0.1"))
 
