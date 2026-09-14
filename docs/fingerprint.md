@@ -37,6 +37,19 @@ fprintd-enroll -f right-index-finger $USER   # don't lift your finger early —
 fprintd-verify $USER
 ```
 
+## Using it for login/sudo/unlock
+
+`./setup.sh fingerprint` also wires `pam_fprintd.so` into
+`/etc/pam.d/system-auth` (as `auth sufficient`, first line, ahead of
+`pam_unix`) — every PAM service that includes it picks it up for free:
+SDDM login, `sudo`, screen unlock. Idempotent, safe to re-run.
+
+Once a finger is enrolled (see above — has to happen locally, not over
+SSH), just touch the sensor at the SDDM password prompt instead of typing
+— `pam_fprintd` is tried first and short-circuits the password step on a
+match. The current greeter theme (`R1999_1`) doesn't render a "place your
+finger" message, but the touch still authenticates.
+
 ## GUI
 
 [`enroll`](https://aur.archlinux.org/packages/enroll) (AUR,
