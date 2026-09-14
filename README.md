@@ -13,8 +13,8 @@ fork running on [Quickshell](https://quickshell.org/).
 >
 > Runs on a bare CachyOS install with the "no desktop" / no-packages option
 > picked at install time — `packages` installs Hyprland, kitty, and SDDM
-> itself (and enables `sddm.service`) rather than assuming they're already
-> there.
+> itself, and `defaults` enables `sddm.service`, rather than assuming any
+> of that is already there.
 
 ## Install
 
@@ -66,8 +66,9 @@ git clone https://github.com/senshu-dev/dotfiles.git && cd dotfiles
 |---|---|
 | `mirrors` | Rank both the Arch and CachyOS mirrorlists (`cachyos-rate-mirrors`) |
 | `update` | `pacman -Syyu` |
-| `packages` | Install pacman + AUR packages (Hyprland, SDDM, kitty, Quickshell, nautilus, bluez, ...), enable `sddm.service` |
-| `remove` | Remove unwanted defaults (Dolphin) and set Nautilus as the default file manager |
+| `packages` | Install pacman + AUR packages (Hyprland, SDDM, kitty, Quickshell, nautilus, bluez, ...) |
+| `remove` | Remove unwanted defaults (Dolphin) — a no-op on a fresh install, still useful re-running on top of an existing DE |
+| `defaults` | Set Nautilus/imv/kitty as default file manager/image viewer/terminal, enable `sddm.service` |
 | `shell` | Install zsh + oh-my-zsh, set as default shell |
 | `config` | Copy `.config/` into `~/.config/` |
 | `fonts` | Install the AnnotationMono font |
