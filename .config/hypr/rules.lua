@@ -60,6 +60,47 @@ hl.window_rule({
     scrolling_width = 0.6,
 })
 
+-- Startup widget group (toggle-widgets.sh, SUPER+G). `move` is
+-- monitor-local (origin added automatically); `monitor_x+N`/`monitor_y+N`
+-- don't work, use plain numbers or `monitor_w-N`/`monitor_h-N` instead.
+-- Not proportional -- redo by hand for a different monitor size.
+-- `pin` keeps windows fixed across workspace/column switches.
+hl.window_rule({
+    name  = "widget-fastfetch-float",
+    match = { class = "^widget-fastfetch$" },
+    float = true,
+    pin   = true,
+    size  = "914 620",
+    move  = "952 52",
+})
+
+hl.window_rule({
+    name  = "widget-cava-float",
+    match = { class = "^widget-cava$" },
+    float = true,
+    pin   = true,
+    size  = "748 301",
+    move  = "monitor_w-865 monitor_h-398",
+})
+
+hl.window_rule({
+    name  = "widget-clock-float",
+    match = { class = "^widget-clock$" },
+    float = true,
+    pin   = true,
+    size  = "419 243",
+    move  = "225 107",
+})
+
+hl.window_rule({
+    name  = "widget-rain-float",
+    match = { class = "^widget-rain$" },
+    float = true,
+    pin   = true,
+    size  = "895 594",
+    move  = "37 442",
+})
+
 local variables = require('variables')
 local MONITOR1 = variables.monitor1
 local MONITOR2 = variables.monitor2
