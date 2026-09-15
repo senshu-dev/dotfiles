@@ -5,8 +5,9 @@ hl.config({
         border_size = 1,
         resize_on_border = true,
         allow_tearing = false,
-
-        layout = "dwindle",
+        -- layout is set in hyprland.lua ("scrolling") -- don't duplicate
+        -- it here, a stale conflicting value here previously shadowed it
+        -- depending on file load order.
     },
 
     decoration = {
