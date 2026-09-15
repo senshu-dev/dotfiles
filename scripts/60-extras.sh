@@ -14,6 +14,7 @@ EXTRAS=(
     gaming
     xray
     hyprtasking
+    hyprglass
     wallpapers
     yc
     office
@@ -257,6 +258,21 @@ setup_hyprtasking() {
     yes | hyprpm add "file://$src"
     hyprpm enable hyprtasking
     ok "hyprtasking installed and enabled"
+}
+
+# HyprGlass (liquid-glass blur/refraction Hyprland plugin, hypr/glass.lua
+# drives it). Built by hyprpm against the exact running Hyprland ABI, same
+# rebuild-after-upgrade caveat as hyprtasking above. No local patching
+# needed -- hyprpm builds straight from upstream's URL.
+setup_hyprglass() {
+    info "Installing hyprglass (Hyprland liquid-glass blur plugin, via hyprpm)"
+    if hyprpm list | grep -q hyprglass; then
+        yes | hyprpm remove hyprglass >/dev/null || true
+        rm -rf "/var/cache/hyprpm/$USER/hyprglass"
+    fi
+    yes | hyprpm add https://github.com/hyprnux/hyprglass
+    hyprpm enable hyprglass
+    ok "hyprglass installed and enabled"
 }
 
 # Full local mirror of dharmx/walls (github.com/dharmx/walls) -- ~3GB of

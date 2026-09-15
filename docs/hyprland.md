@@ -9,8 +9,8 @@ Written in Lua (`hl.*` config API) rather than plain `hyprland.conf`:
   new machine or monitor layout.
 - **`monitor.lua`**, **`hyprenv.lua`**, **`hyprland.lua`**, **`visual.lua`**,
   **`keybindings.lua`**, **`gestures.lua`**, **`rules.lua`**,
-  **`autostart.lua`** — one concern per file, all `require`d from
-  `hyprland.lua`.
+  **`autostart.lua`**, **`glass.lua`** — one concern per file, all
+  `require`d from `hyprland.lua`.
 - **`hypridle.conf`** — idle timeouts + `loginctl lock-session` signalling.
   Lock screen itself is owned by the DankMaterialShell fork now, not a
   file in this repo.
@@ -60,6 +60,10 @@ tape of columns), set via `general.layout` in `hyprland.lua`:
 Hyprtasking's overview panning (`tasking.lua`) uses `SUPER + Comma` (pan
 left), `SUPER + Shift + Comma` / `SUPER + Shift + Period` (move window left
 / right in the overview) — moved off h/l to make room for the above.
+
+HyprGlass (`glass.lua`) layers a liquid-glass blur/refraction effect on top
+of `visual.lua`'s existing `decoration.blur` — no keybind, purely visual,
+driven by the existing per-window opacity already set in `rules.lua`.
 
 ## Touchpad gestures (`gestures.lua`)
 
