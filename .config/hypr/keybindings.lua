@@ -99,8 +99,12 @@ hl.bind(mainMod .. " + w", hl.dsp.exec_cmd("qs ipc call dash toggle wallpaper"))
 -- Linux-DE lock convention instead, out of the SUPER namespace entirely.
 hl.bind("CTRL + ALT + l", hl.dsp.exec_cmd("qs ipc call lock lock"))
 hl.bind(mainMod .. " + escape", hl.dsp.exec_cmd("hyprctl reload"))
-hl.bind("PRINT", hl.dsp.exec_cmd('grim -g "$(slurp)" - | tee ~/screenshot_$(date +%Y%m%d_%H%M%S).png | wl-copy'))
-hl.bind(mainMod .. " + s", hl.dsp.exec_cmd('grim -g "$(slurp)" - | tee ~/screenshot_$(date +%Y%m%d_%H%M%S).png | wl-copy'))
+-- satty replaces the old raw grim|tee|wl-copy pipe: annotates before
+-- saving, copies to clipboard itself on save/close.
+hl.bind("PRINT", hl.dsp.exec_cmd('grim -g "$(slurp)" - | satty --filename - --output-filename ~/screenshot_$(date +%Y%m%d_%H%M%S).png'))
+hl.bind(mainMod .. " + s", hl.dsp.exec_cmd('grim -g "$(slurp)" - | satty --filename - --output-filename ~/screenshot_$(date +%Y%m%d_%H%M%S).png'))
+-- Startup widget group toggle -- same script autostart.lua calls on login.
+hl.bind(mainMod .. " + g", hl.dsp.exec_cmd("~/.config/hypr/scripts/toggle-widgets.sh"))
 
 
 -- ================================ --
