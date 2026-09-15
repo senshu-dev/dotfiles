@@ -13,6 +13,7 @@ PACMAN_PACKAGES=(
     make
     playerctl
     brightnessctl
+    cava               # terminal audio visualizer
     hyprland
     hyprpm              # split out of the hyprland package as of 0.56.2-3;
                         # autostart.lua's `hyprpm reload -n` and hyprtasking
@@ -23,6 +24,7 @@ PACMAN_PACKAGES=(
     slurp
     cliphist
     grim
+    satty              # screenshot annotation (swappy successor); bind over grim+slurp
     xdg-desktop-portal-hyprland
     hyprsunset
     hypridle
@@ -55,6 +57,7 @@ PACMAN_PACKAGES=(
     gst-plugins-bad    # qylock-sddm.sh: video playback backend
     gst-plugins-ugly   # qylock-sddm.sh: video playback backend
     neovim             # tracked for reproducibility; already on this host
+    fastfetch          # tracked for reproducibility; ships by default on CachyOS
     sshfs              # nvim remote workflow: mount remote dirs, edit with full local LSP
     ripgrep            # telescope live_grep backend
     fd                 # telescope find_files backend
@@ -75,7 +78,7 @@ PACMAN_PACKAGES=(
 )
 
 AUR_PACKAGES=(
-    google-chrome        # .config/chrome-flags.conf: native Wayland + middle-click autoscroll
+    google-chrome        # .config/chrome-flags.conf: native Wayland
     hyprqt6engine
     hyprmod
     nautilus-open-any-terminal  # "Open Terminal Here" -> kitty
