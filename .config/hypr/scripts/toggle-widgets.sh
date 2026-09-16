@@ -25,6 +25,6 @@ else
     kitty --class widget-fastfetch -e sh -c \
         "printf '\033[?1049h'; fastfetch --config ~/.config/fastfetch/widget.jsonc; printf '\033[?25l'; read" &
     kitty --class widget-cava -e cava &
-    kitty --class widget-clock -e tty-clock &
+    kitty --class widget-clock -e tty-clock -c -C 6 &
     kitty --class widget-rain -e terminal-rain --rain-color white -t --lightning-color cyan --speed medium &
 fi
