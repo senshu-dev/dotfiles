@@ -19,6 +19,4 @@ hl.on("hyprland.start", function ()
     -- fought DMS's own WallpaperBackground.qml for the background layer
     -- and overwrote wallpaper picks with a random one on every login. DMS
     -- now owns wallpaper + matugen theming end to end (SUPER+w).
-    -- Startup widget group -- also toggleable afterward via SUPER+G.
-    hl.exec_cmd("~/.config/hypr/scripts/toggle-widgets.sh")
 end)
