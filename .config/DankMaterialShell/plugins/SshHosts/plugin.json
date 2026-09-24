@@ -1,0 +1,13 @@
+{
+    "id": "sshHosts",
+    "name": "SSH Hosts",
+    "description": "Hosts from ~/.ssh/config, opens ssh in kitty",
+    "version": "1.0.0",
+    "author": "senshu_",
+    "type": "launcher",
+    "capabilities": ["launcher"],
+    "component": "./Launcher.qml",
+    "trigger": "@",
+    "icon": "terminal",
+    "permissions": ["process"]
+}
