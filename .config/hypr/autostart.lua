@@ -13,7 +13,6 @@ hl.on("hyprland.start", function ()
     -- leaves evidence instead of just a dead bar.
     hl.exec_cmd("sh -c 'while true; do dms run --config ~/.config/quickshell >>~/.cache/dms-run.log 2>&1; sleep 1; done'")
     hl.exec_cmd("hypridle")
-    hl.exec_cmd("wl-paste --watch cliphist store &") -- feeds the sidebar clipboard-history tile
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &")
     -- wallpaper.sh (hyprpaper + themegen, Linux Rising-era) retired: it
     -- fought DMS's own WallpaperBackground.qml for the background layer

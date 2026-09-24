@@ -22,7 +22,6 @@ PACMAN_PACKAGES=(
     sddm
     quickshell
     slurp
-    cliphist
     grim
     satty              # screenshot annotation (swappy successor); bind over grim+slurp
     xdg-desktop-portal-hyprland
