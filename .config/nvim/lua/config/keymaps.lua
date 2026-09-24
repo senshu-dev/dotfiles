@@ -12,3 +12,5 @@ end, { desc = "Toggle Claude CLI terminal" })
 map("n", "<leader>rm", function()
 	require("config.remote").mount()
 end, { desc = "Mount remote host via sshfs" })
+
+map("n", "<F2>", vim.lsp.buf.rename, { desc = "LSP rename" })
