@@ -8,7 +8,9 @@ local launchPrefix = variables.launchPrefix
 --      APPS & LAUNCHERS            --
 -- ================================ --
 hl.bind(mainMod .. " + backspace", hl.dsp.exec_cmd(launchPrefix .. programs.terminal))
-hl.bind(mainMod .. " + space", hl.dsp.exec_cmd(launchPrefix .. programs.menu))
+-- Tap SUPER alone. Release bind: cancelled only if another Hyprland bind fired
+-- meanwhile, so SUPER + an unbound key still opens the menu on release.
+hl.bind(mainMod .. " + Super_L", hl.dsp.exec_cmd(launchPrefix .. programs.menu), { release = true })
 hl.bind(mainMod .. " + e", hl.dsp.exec_cmd(launchPrefix .. programs.fileManager))
 -- Windows' own Task Manager shortcut, repurposed the same way here.
 -- --class gives this kitty instance its own app_id (kitty-btop, distinct
@@ -22,7 +24,15 @@ hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd(launchPrefix .. programs.termin
 -- ================================ --
 hl.bind(mainMod .. " + c", hl.dsp.window.close())
 hl.bind(mainMod .. " + q", hl.dsp.window.close())
-hl.bind(mainMod .. " + ALT + space", hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + space", hl.dsp.window.float({ action = "toggle" }))
+-- Float + pin (PiP-style, follows across workspaces); again restores tiled.
+hl.bind(mainMod .. " + ALT + space", function()
+    local w = hl.get_active_window()
+    if not w then return end
+    local on = not w.pinned
+    hl.dispatch(hl.dsp.window.float({ action = on and "on" or "off" }))
+    hl.dispatch(hl.dsp.window.pin({ action = on and "on" or "off" }))
+end)
 hl.bind(mainMod .. " + f", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + m", hl.dsp.window.fullscreen({ mode = 1 })) -- maximize (keeps bar/borders)
 hl.bind(mainMod .. " + b", hl.dsp.window.pseudo())
@@ -90,6 +100,7 @@ hl.bind(mainMod .. " + v", hl.dsp.exec_cmd("qs ipc call clipboard toggle"))
 hl.bind(mainMod .. " + t", hl.dsp.exec_cmd("qs ipc call thememenu toggle"))
 hl.bind(mainMod .. " + grave", hl.dsp.exec_cmd("qs ipc call topbar toggle && qs ipc call dock toggle"))
 hl.bind(mainMod .. " + n", hl.dsp.exec_cmd("qs ipc call settings open"))
+hl.bind(mainMod .. " + SHIFT + n", hl.dsp.exec_cmd("qs ipc call notifications toggle"))
 hl.bind(mainMod .. " + i", hl.dsp.exec_cmd("qs ipc call panel toggle"))
 -- DMS's own wallpaper picker (dash's wallpaper tab): browses ~/walls,
 -- picking a wallpaper also drives matugen theming (currentTheme: dynamic).
