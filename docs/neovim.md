@@ -35,6 +35,7 @@ config relies entirely on Neovim's built-in default LSP keymaps (0.11+).
 | `:Lazy` | Plugin manager UI — install/update/clean/profile |
 | `:checkhealth` | Diagnose LSP/treesitter/clipboard/etc. setup issues |
 | `:LspInfo` | Show which LSP servers are attached to the current buffer |
+| `:Mason` | LSP server installer UI — status, logs, install/uninstall |
 
 ## Things that need no action from you
 
@@ -47,13 +48,15 @@ config relies entirely on Neovim's built-in default LSP keymaps (0.11+).
 
 ## If something's not working
 
-- LSP servers are installed via pacman/AUR (`scripts/20-packages.sh`), never
-  `:Mason` — there is no Mason here. A missing server means installing its
-  system package, not running an in-editor installer.
-- `helm_ls` specifically needs the `--mflags --nocheck` AUR build path (its
-  own integration tests fail sandboxed) — already handled by
-  `scripts/20-packages.sh`, just noting it in case a manual AUR build of it
-  ever fails.
+- LSP servers are installed by [`mason.nvim`](https://github.com/mason-org/mason.nvim)
+  into `~/.local/share/nvim/mason/`, not by pacman. Missing servers from
+  the `ensure_installed` list in `lua/plugins/lsp.lua` install
+  automatically on startup; `:Mason` shows status and install logs
+  (press `i` on an entry to retry, `X` to uninstall).
+- npm-based servers (`pyright`, `bashls`, `yamlls`, `dockerls`) need `npm`
+  and `gopls` needs `go` — both in `scripts/20-packages.sh`. Formatters
+  (`ruff`, `shfmt`) and debugger backends (`delve`, `python-debugpy`) are
+  still pacman packages, not Mason.
 
 ## Architecture
 
@@ -99,12 +102,15 @@ must apply last, after plugins are loaded).
   - `:ArduinoRegen` — reruns the compilation-database step for the sketch
     in the current directory, reading the FQBN back out of its `.fqbn`
     marker (run this after adding new `#include`s).
-- **`lua/plugins/lsp.lua`** (`nvim-lspconfig`) — every server is installed
-  from pacman/AUR, never `mason.nvim` (this host blocks Mason's installer
-  network calls): `gopls`, `terraformls`, `pyright`, `bashls`, `yamlls`,
-  `dockerls`, `helm_ls`, `lua_ls`, `clangd`. `yamlls` has schema-store
-  enabled with key-ordering checks off; `lua_ls` knows the `vim` global.
-  Diagnostics show as virtual text + signs + underline, not on insert.
+- **`lua/plugins/lsp.lua`** (`nvim-lspconfig` + `mason.nvim` +
+  `mason-lspconfig.nvim`) — Mason installs every server listed in
+  `ensure_installed` (`gopls`, `terraformls`, `pyright`, `bashls`,
+  `yamlls`, `dockerls`, `helm_ls`, `lua_ls`, `clangd`) and
+  `mason-lspconfig` auto-enables every Mason-installed server — adding a
+  server is one line in that list (or `:MasonInstall` it by hand).
+  `yamlls` has schema-store enabled with key-ordering checks off; `lua_ls`
+  knows the `vim` global. Diagnostics show as virtual text + signs +
+  underline, not on insert.
 - **`lua/plugins/completion.lua`** (`saghen/blink.cmp`) — default keymap
   preset, sources are `lsp` + `path` + `buffer`. Wired into
   `lsp.lua` via `require("blink.cmp").get_lsp_capabilities()`.

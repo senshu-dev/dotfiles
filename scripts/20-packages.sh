@@ -61,14 +61,8 @@ PACMAN_PACKAGES=(
     ripgrep            # telescope live_grep backend
     fd                 # telescope find_files backend
     tree-sitter-cli    # nvim-treesitter parser installs
-    gopls              # nvim LSP: Go
-    pyright            # nvim LSP: Python
-    bash-language-server    # nvim LSP: Bash
-    yaml-language-server    # nvim LSP: YAML (k8s/Helm schemas)
-    dockerfile-language-server  # nvim LSP: Dockerfile
-    lua-language-server     # nvim LSP: Lua (editing this config)
+    npm                # mason.nvim: npm-based LSP servers (pyright, bashls, yamlls, dockerls)
     arduino-cli         # Arduino/ESP: board cores, sketch scaffolding, compile db
-    clang               # provides clangd; nvim LSP for .ino (Arduino/ESP) via arduino-cli's compile_commands.json
     jq                  # scripts/40-config.sh: idempotent settings.json patch
     ruff                # nvim format-on-save: Python (conform.nvim)
     shfmt               # nvim format-on-save: Bash (conform.nvim)
@@ -84,8 +78,6 @@ AUR_PACKAGES=(
     bluetuith                   # TUI bluetooth manager, sidebar bluetooth tile left-click
     tty-clock
     terminal-rain-lightning
-    terraform-ls        # nvim LSP: Terraform
-    helm-ls              # nvim LSP: Helm
 )
 
 # Sources hosts/<host>/packages.sh (if it exists) for HOST_PACMAN_PACKAGES /
@@ -109,11 +101,7 @@ setup_pacman_packages() {
 
 setup_aur_packages() {
     info "Installing AUR packages with yay"
-    # --nocheck: helm-ls's PKGBUILD runs network-dependent integration
-    # tests in check() that fail in a sandboxed build (confirmed on this
-    # host); skipping tests doesn't affect the built binary, only the
-    # packager's own pre-install verification.
-    yay -S --noconfirm --mflags --nocheck "${AUR_PACKAGES[@]}"
+    yay -S --noconfirm "${AUR_PACKAGES[@]}"
     ok "AUR packages installed"
 }
 
