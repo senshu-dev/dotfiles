@@ -1,30 +1,23 @@
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.uv.fs_stat(lazypath) then
-	local out = vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable",
-		lazypath,
-	})
-	if vim.v.shell_error ~= 0 then
-		vim.api.nvim_echo({
-			{ "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-			{ out, "WarningMsg" },
-		}, true, {})
-		vim.fn.getchar()
-		os.exit(1)
-	end
-end
-vim.opt.rtp:prepend(lazypath)
+-- 16-color mode: draw with kitty's ANSI palette, which DMS regenerates
+-- from the wallpaper, so nvim follows the desktop theme with no plugin.
+vim.o.termguicolors = false
 
-require("config.options")
-require("config.keymaps")
-require("config.arduino")
+vim.o.number = true
+vim.o.relativenumber = true
+vim.o.clipboard = "unnamedplus"
+vim.o.undofile = true
+vim.o.ignorecase = true
+vim.o.smartcase = true
+vim.o.expandtab = true
+vim.o.shiftwidth = 2
+vim.o.tabstop = 2
 
-require("lazy").setup("plugins", {
-	install = { colorscheme = { "habamax" } },
-})
-
-require("config.theme")
+-- Built-in autocompletion, setup from :h ins-autocompletion-example
+vim.o.autocomplete = true
+vim.o.complete = ".^5,w^5,b^5,u^5"
+vim.keymap.set("i", "<Tab>", function()
+  return vim.fn.pumvisible() == 1 and "<C-n>" or "<Tab>"
+end, { expr = true })
+vim.keymap.set("i", "<S-Tab>", function()
+  return vim.fn.pumvisible() == 1 and "<C-p>" or "<S-Tab>"
+end, { expr = true })

@@ -57,17 +57,8 @@ PACMAN_PACKAGES=(
     gst-plugins-ugly   # qylock-sddm.sh: video playback backend
     neovim             # tracked for reproducibility; already on this host
     fastfetch          # tracked for reproducibility; ships by default on CachyOS
-    sshfs              # nvim remote workflow: mount remote dirs, edit with full local LSP
-    ripgrep            # telescope live_grep backend
-    fd                 # telescope find_files backend
-    tree-sitter-cli    # nvim-treesitter parser installs
-    npm                # mason.nvim: npm-based LSP servers (pyright, bashls, yamlls, dockerls)
-    arduino-cli         # Arduino/ESP: board cores, sketch scaffolding, compile db
-    jq                  # scripts/40-config.sh: idempotent settings.json patch
-    ruff                # nvim format-on-save: Python (conform.nvim)
-    shfmt               # nvim format-on-save: Bash (conform.nvim)
-    delve               # nvim DAP: Go debugger backend (nvim-dap-go)
-    python-debugpy      # nvim DAP: Python debugger backend (nvim-dap-python)
+    ripgrep            # nvim's default :grep backend
+    jq                  # hypr/scripts/cycle-workspace.sh: focused-monitor lookup
 )
 
 AUR_PACKAGES=(

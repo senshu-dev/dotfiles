@@ -70,9 +70,8 @@ silently applying the wrong overlay — add a `hosts/<name>/` directory first.
 - **`drivers/goodix-27c6-5125/`** — a git submodule fork providing a Goodix
   `27c6:5125` fingerprint sensor driver, **laptop only**. See
   [`docs/fingerprint.md`](docs/fingerprint.md).
-- **`.config/nvim/`** — hand-rolled Neovim config (`lazy.nvim`, no distro
-  like LazyVim/NvChad), themed live from the desktop's matugen palette. See
-  [`docs/neovim.md`](docs/neovim.md).
+- **`.config/nvim/`** — minimal Neovim config: a single `init.lua`, no
+  plugins; colors come from kitty's DMS-generated palette.
 - **`qylock-sddm.sh`** — standalone SDDM login-theme manager (not part of the
   automated setup; run manually when wanted). See
   [`docs/qylock.md`](docs/qylock.md).
@@ -117,8 +116,6 @@ quit; everything installs if run non-interactively, e.g. piped from curl):
 
 - [`docs/hyprland.md`](docs/hyprland.md) — config file layout, keybindings,
   touchpad gestures, `xray-instance.sh`, gaming performance rules
-- [`docs/neovim.md`](docs/neovim.md) — keybindings, commands, plugin
-  architecture
 - [`docs/dank-shell.md`](docs/dank-shell.md) — submodule setup, live deploy,
   rollback
 - [`docs/qylock.md`](docs/qylock.md) — SDDM theme management
