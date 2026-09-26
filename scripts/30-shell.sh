@@ -19,6 +19,11 @@ setup_shell() {
             info "Adding zoxide init to .zshrc"
             echo -e '\neval "$(zoxide init zsh)"' >> "$HOME/.zshrc"
         fi
+
+        if ! grep -q '^export EDITOR=' "$HOME/.zshrc"; then
+            info "Setting EDITOR=nvim in .zshrc"
+            echo -e '\nexport EDITOR=nvim' >> "$HOME/.zshrc"
+        fi
     else
         warn ".zshrc not found, skipping theme"
     fi
