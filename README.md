@@ -103,13 +103,15 @@ quit; everything installs if run non-interactively, e.g. piped from curl):
 | Extra | What it installs |
 |---|---|
 | `zen` | Zen Browser (downloaded release tarball, not packaged) |
-| `bluetooth` | Enables & starts `bluetooth.service` (packages are installed unconditionally; the service is opt-in) |
 | `vscode` | VS Code Insiders (AUR) |
 | `podman` | `podman` + `podman-compose`, plus a `docker` → `podman` shim at `/usr/local/bin/docker` so tools that hardcode `docker` keep working |
 | `binenv` | [binenv](https://github.com/devops-works/binenv) (official install script) — a version manager for CLI binaries |
 | `k9s` | Kubernetes TUI (AUR) |
 | `gaming` | CachyOS gaming meta packages — **requires the [CachyOS repo](https://wiki.cachyos.org/cachyos_repo/) already added to `pacman.conf`**, not part of vanilla Arch |
 | `xray` | [Xray-core](https://github.com/XTLS/Xray-core) (built from source, pinned commit), `cap_net_admin` granted for tun mode. Driven by `hypr/scripts/xray-instance.sh`, see [`docs/hyprland.md`](docs/hyprland.md) |
+| `hyprtasking` | [hyprtasking](https://github.com/raybbian/hyprtasking) workspace-overview plugin, built from a locally patched clone via `hyprpm` |
+| `wallpapers` | Clones [dharmx/walls](https://github.com/dharmx/walls) (~3GB) to `~/walls` for DMS's wallpaper picker |
+| `yc` | [Yandex Cloud CLI](https://yandex.cloud/en/docs/cli/) (`yc`) |
 | `office` | LibreOffice (`libreoffice-fresh`) + `hunspell-en_us`/`hunspell-ru` spellcheck, `ttf-liberation` (Word/Excel-compatible fonts), `evince` (PDF viewer) |
 
 ## Docs

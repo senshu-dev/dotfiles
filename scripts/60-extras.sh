@@ -189,20 +189,14 @@ setup_gaming() {
     ok "Gaming packages installed"
 }
 
-# Xray-core (VLESS client, driven headlessly by scripts/xray-instance.sh).
-# No packaged build exists that isn't bundled for some unrelated panel
-# project, so this builds from source. Pinned to a specific commit rather
-# than `go install .../main@latest`: @latest resolved to tagged release
-# 26.3.27, whose tun inbound silently produced a non-functional route (no
-# error, device came up, but traffic never actually reached the outbound) --
-# this commit is the one actually verified end-to-end (clean TLS handshake,
-# confirmed egress via the VPN server's own IP). Bump it deliberately, not
-# casually -- re-verify tun mode before trusting a newer commit.
+# Xray-core (VLESS client, driven headlessly by scripts/xray-instance.sh), built
+# from source -- no packaged build exists. Pinned to a verified-working commit:
+# @latest (26.3.27) silently produced a non-functional tun route. Bump
+# deliberately, re-verifying tun mode, not casually.
 #
-# Needs cap_net_admin to create/route its own tun device as a non-root user
-# for tun mode; since this binary isn't pacman-managed there's no upgrade
-# hook to reapply it automatically -- re-run this (or at least the setcap
-# line) after rebuilding.
+# Needs cap_net_admin for tun mode as a non-root user; since this binary isn't
+# pacman-managed, nothing reapplies that automatically after a rebuild -- re-run
+# this (or at least the setcap line) when the binary changes.
 XRAY_VERIFIED_COMMIT=7d214f8b094f75322fa3990f8aadad1c912f24f5
 setup_xray() {
     local tmp
@@ -216,21 +210,17 @@ setup_xray() {
     ok "xray installed, cap_net_admin granted"
 }
 
-# Hyprtasking (workspace-overview Hyprland plugin, hypr/tasking.lua drives
-# it). Built by hyprpm against the exact running Hyprland ABI, so it's
-# reinstalled by re-running this rather than upgraded independently -- if
-# Hyprland gets updated, `hyprpm update` (or a re-run of this) is needed to
-# rebuild against the new ABI. meson, glaze and hyprland-protocols are
-# hyprpm's build deps (per `pacman -Qi hyprland`'s optional deps) and none
-# are in PACMAN_PACKAGES.
+# Hyprtasking (workspace-overview Hyprland plugin, hypr/tasking.lua drives it).
+# Built by hyprpm against the exact running Hyprland ABI -- re-run this (or
+# `hyprpm update`) after a Hyprland upgrade to rebuild against the new ABI.
+# meson/glaze/hyprland-protocols are hyprpm's build deps, installed here
+# rather than in PACMAN_PACKAGES since nothing else needs them.
 #
-# Built from a local patched clone, not straight from upstream: upstream's
-# meson.build globs *.cpp from the project root, which (with meson >= ~1.12)
-# also sweeps up meson's own transient compiler sanity-check file under
-# build/meson-private/ -- gone by the time ninja tries to compile it, so the
-# build fails 100% of the time against current meson. Excluding build/ from
-# the glob fixes it; upstream (https://github.com/raybbian/hyprtasking)
-# hasn't touched meson.build since ~v0.47.0, so don't wait on a fix there.
+# Built from a local patched clone, not upstream directly: upstream's
+# meson.build globs *.cpp from the project root, which on meson >= ~1.12 also
+# sweeps up meson's own transient sanity-check file and fails the build 100%
+# of the time. Excluding build/ from the glob fixes it; upstream hasn't
+# touched meson.build since ~v0.47.0 (https://github.com/raybbian/hyprtasking).
 setup_hyprtasking() {
     info "Installing hyprtasking (Hyprland workspace-overview plugin, via hyprpm)"
     sudo pacman -S --needed --noconfirm meson glaze hyprland-protocols

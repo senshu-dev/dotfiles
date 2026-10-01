@@ -28,9 +28,15 @@ Mod key is `SUPER` (defined in `variables.lua`).
 | `SUPER + Space` | App launcher |
 | `SUPER + E` | File manager |
 | `CTRL + ALT + L` | Lock screen |
-| `SUPER + T` | Theme switcher (radial menu) |
+| `SUPER + T` | Flip light/dark theme |
 | `SUPER + P` | Power menu |
 | `SUPER + V` | Clipboard history |
+| `SUPER + N` | Open settings |
+| `SUPER + Shift + N` | Toggle notifications |
+| `SUPER + I` | Toggle dash + control-center panel |
+| `SUPER + W` | Wallpaper picker |
+| `SUPER + grave` | Toggle topbar + dock |
+| `CTRL + SHIFT + Escape` | Terminal task manager (btop) |
 | `SUPER + C` / `SUPER + Q` | Close window |
 | `SUPER + F` | Fullscreen |
 | `SUPER + M` | Maximize (fullscreen mode 1, keeps bar/borders) |

@@ -13,7 +13,7 @@ PACMAN_PACKAGES=(
     make
     playerctl
     brightnessctl
-    cava               # terminal audio visualizer
+    cava               # DMS's CavaService.qml shells out to this for the audio-visualizer widget
     hyprland
     hyprpm              # split out of the hyprland package as of 0.56.2-3;
                         # autostart.lua's `hyprpm reload -n` and hyprtasking
@@ -25,7 +25,6 @@ PACMAN_PACKAGES=(
     grim
     satty              # screenshot annotation (swappy successor); bind over grim+slurp
     xdg-desktop-portal-hyprland
-    hyprsunset
     hypridle
     fzf
     zoxide
@@ -33,18 +32,16 @@ PACMAN_PACKAGES=(
     imv                # default image viewer (screenshot tile, nautilus)
     yay
     qt6-5compat
-    libcanberra        # canberra-gtk-play: volume-change blip in the sidebar
-    pacman-contrib     # checkupdates: sidebar update-count tile
-    socat              # sidebar submap indicator: reads the Hyprland event socket
+    pacman-contrib     # checkupdates: DMS's update-count tile (core/internal/server/sysupdate)
     nautilus
     gvfs               # trash, mounting drives, network shares
     file-roller        # archive extract/create integration
     tumbler            # thumbnailing service
     ffmpegthumbnailer  # video thumbnails for tumbler
     nautilus-python    # base for python nautilus extensions
-    libnetfilter_queue
+    libnetfilter_queue # zapret2 (DPI-bypass tool, unmanaged by this repo) needs this for its nfqws tun queue
     bluez              # bluetoothd; services/Bluetooth.qml talks to it over D-Bus
-    bluez-utils        # bluetoothctl (CLI), bluetuith's backend
+    bluez-utils        # bluetoothctl CLI
     matugen            # wallpaper -> Material You palette; dms shells out to it directly
     adw-gtk-theme      # adw-gtk3/adw-gtk3-dark; dms flips gtk-theme via gsettings on theme change
     qt6-declarative    # qylock-sddm.sh: Qt6 SDDM themes (most qylock themes)
@@ -66,9 +63,6 @@ AUR_PACKAGES=(
     hyprqt6engine
     hyprmod
     nautilus-open-any-terminal  # "Open Terminal Here" -> kitty
-    bluetuith                   # TUI bluetooth manager, sidebar bluetooth tile left-click
-    tty-clock
-    terminal-rain-lightning
 )
 
 # Sources hosts/<host>/packages.sh (if it exists) for HOST_PACMAN_PACKAGES /
