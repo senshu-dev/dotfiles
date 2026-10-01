@@ -73,7 +73,7 @@ for _, ws in ipairs({ 5, 6, 7, 8 }) do
 end
 
 hl.window_rule({
-    match      = { class = "(?i)(^steam_app_|.*game.*)" },
+    match      = { class = "(?i)(^steam_app_.*|.*game.*)" },
     workspace  = "1",
     no_anim    = true,
     no_blur    = true,

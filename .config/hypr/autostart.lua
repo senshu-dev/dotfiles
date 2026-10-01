@@ -14,6 +14,13 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("sh -c 'while true; do dms run --config ~/.config/quickshell >>~/.cache/dms-run.log 2>&1; sleep 1; done'")
     hl.exec_cmd("hypridle")
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &")
+    -- XWayland has no primary output on its own, so Wine/Proton games took
+    -- the first one (HDMI-A-1, at 0,0) as monitor 0: only its 75 Hz modes
+    -- were offered and DXVK capped fullscreen games at 75 FPS even though
+    -- rules.lua shows them on the 144 Hz main monitor.
+    -- ponytail: one-shot, XWayland forgets it if the output gets re-created
+    -- (monitor hotplug); re-run on hl.on("monitor.added") if that bites.
+    hl.exec_cmd("xrandr --output " .. require('variables').monitor1 .. " --primary")
     -- wallpaper.sh (hyprpaper + themegen, Linux Rising-era) retired: it
     -- fought DMS's own WallpaperBackground.qml for the background layer
     -- and overwrote wallpaper picks with a random one on every login. DMS
