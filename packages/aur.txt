@@ -1,0 +1,20 @@
+# Hyprland (git)
+hyprland-git
+hyprpm-git
+
+# Caelestia Shell
+caelestia-shell-git
+caelestia-sddm-minimalistv2-git
+
+# Terminal
+kitty-git
+
+# Fonts
+ttf-annotationmono-nerd
+
+# Apps
+zen-browser-bin
+visual-studio-code-insiders-bin
+
+# Auth
+soteria-git

@@ -1,0 +1,3 @@
+# Workaround for aquamarine 0.16+ EINVAL atomic commit loop on NVIDIA
+# See: https://github.com/hyprwm/aquamarine/issues/483
+export AQ_NO_ATOMIC=1

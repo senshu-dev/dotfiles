@@ -44,10 +44,16 @@ setup_caelestia() {
     done
 }
 
+setup_uwsm() {
+    info "Linking uwsm environment..."
+    link_config "$CONFIG_SRC/uwsm/env-hyprland" "$HOME/.config/uwsm/env-hyprland"
+}
+
 setup_all() {
     setup_hypr
     setup_kitty
     setup_caelestia
+    setup_uwsm
     echo
     success "All configs linked. Run 'hyprctl reload' to apply Hyprland changes."
 }
@@ -60,6 +66,7 @@ Components:
   hypr        Hyprland config
   kitty       kitty terminal config
   caelestia   Caelestia shell config
+  uwsm        uwsm environment (aquamarine workarounds)
 
 With no arguments, links all configs.
 EOF
@@ -75,6 +82,7 @@ for arg in "$@"; do
         hypr)       setup_hypr ;;
         kitty)      setup_kitty ;;
         caelestia)  setup_caelestia ;;
+        uwsm)       setup_uwsm ;;
         --help|-h)  usage; exit 0 ;;
         *)          error "Unknown component: $arg"; usage; exit 1 ;;
     esac

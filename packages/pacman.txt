@@ -1,0 +1,66 @@
+# Kernel & Boot
+linux-zen
+linux-zen-headers
+linux-zen-docs
+linux-firmware
+mkinitcpio
+limine
+efibootmgr
+amd-ucode
+
+# Base
+base-devel
+sudo
+dkms
+zsh
+
+# GPU (NVIDIA)
+nvidia-open-dkms
+nvidia-utils
+nvidia-settings
+lib32-nvidia-utils
+mesa
+lib32-mesa
+vulkan-icd-loader
+lib32-vulkan-icd-loader
+
+# Wayland / Display
+wayland
+xorg-xwayland
+qt5-wayland
+qt6-wayland
+glfw
+xdg-desktop-portal
+xdg-desktop-portal-gtk
+xdg-desktop-portal-hyprland
+
+# Network
+networkmanager
+wpa_supplicant
+ufw
+
+# Audio
+pipewire
+pipewire-alsa
+pipewire-pulse
+wireplumber
+
+# Filesystem
+btrfs-progs
+gvfs
+nautilus
+
+# System
+zram-generator
+uwsm
+fastfetch
+btop
+ffmpeg4.4
+
+# Dev
+git
+neovim
+github-cli
+
+# Apps
+discord
