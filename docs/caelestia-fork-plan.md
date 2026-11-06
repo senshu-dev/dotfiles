@@ -45,18 +45,17 @@ cd ~/workspace/caelestia-shell
 git push -u origin custom/main
 ```
 
-### Задача 2: Per-workspace wallpaper — порт на C++ (2-4 часа)
+### Задача 2: Per-workspace wallpaper — порт на C++ ✅
 
-PR #2210 меняет `services/Wallpapers.qml`, но upstream перенёс логику в C++:
-- **Новое расположение:** `plugin/src/Caelestia/Scheme/wallpapers.cpp` / `.hpp`
-- **Что нужно:** изучить diff PR #2210, адаптировать к C++ API, скомпилировать
-
-Шаги:
-1. `git diff pr/2210..main -- services/Wallpapers.qml` — понять что PR менял
-2. Изучить `plugin/src/Caelestia/Scheme/wallpapers.cpp` — текущая C++ реализация
-3. Добавить per-workspace логику в C++ код
-4. Обновить QML биндинги если нужно
-5. Собрать и протестировать
+Реализовано (коммит `d6be56e8`). Изменения в 13 файлах:
+- C++ Config: `WorkspaceWallpapers.enabled` в `backgroundconfig.hpp`
+- C++ State: `workspaceWallpapers` QVariantMap в `rootnodes.hpp`
+- C++ Wallpapers: `wallpaperForWorkspace`/`assignToWorkspace`/`clearWorkspace(s)` в `wallpapers.cpp/hpp`
+- C++ CMake: добавлена зависимость `caelestia-state` для Scheme модуля
+- QML: `WallpaperImpl` резолвит обои per-screen через активный workspace
+- QML: все call site `setWallpaper` также записывают в workspace map когда фича включена
+- UI: toggle в Wallpaper & Style настройках nexus
+- Включается через `background.workspaceWallpapers.enabled: true` в `shell.json`
 
 ### Задача 3: Установка форка на хост (в процессе)
 

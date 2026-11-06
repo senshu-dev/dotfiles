@@ -4,7 +4,7 @@
 
 _pkgname='caelestia-lib'
 pkgname="$_pkgname-git"
-pkgver=0.1.0.r0
+pkgver=0.1.0.r113.gd8f3b72
 pkgrel=1
 pkgdesc='The backing library for Caelestia (provides caelestia::caelestia cmake target)'
 arch=('x86_64' 'aarch64')

@@ -61,7 +61,7 @@ build() {
 
     cmake -B build -G Ninja \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DCMAKE_INSTALL_PREFIX=/
+        -DCMAKE_INSTALL_PREFIX=/usr
     cmake --build build
 }
 
