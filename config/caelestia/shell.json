@@ -133,5 +133,10 @@
             }
         ]
     },
-    "utilities": {}
+    "utilities": {},
+    "session": {
+        "commands": {
+            "logout": ["uwsm", "stop"]
+        }
+    }
 }

@@ -23,5 +23,8 @@
     },
     "launcher": {
         "enabled": true
+    },
+    "notifs": {
+        "enabled": false
     }
 }

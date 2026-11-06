@@ -29,6 +29,9 @@ hl.config({
     scrolling = {
         fullscreen_on_one_column = true,
     },
+    render = {
+        cm_enabled = false,
+    },
     xwayland = {
         force_zero_scaling = true
     },

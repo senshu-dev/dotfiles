@@ -6,7 +6,6 @@ local known_monitors = {
     ["DP-6"] = {
         mode = "1920x1080@144",
         scale = "1",
-        supports_hdr = -1,
     },
     ["HDMI-A-2"] = {
         mode = "1920x1080@75",
@@ -26,7 +25,6 @@ local function setup_monitors()
                     mode     = known.mode,
                     position = "auto",
                     scale    = known.scale,
-                    supports_hdr = known.supports_hdr,
                 })
             else
                 hl.monitor({
