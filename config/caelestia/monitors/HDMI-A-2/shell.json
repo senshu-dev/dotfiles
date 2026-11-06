@@ -21,9 +21,6 @@
     "utilities": {
         "enabled": false
     },
-    "notifications": {
-        "enabled": false
-    },
     "launcher": {
         "enabled": true
     }
