@@ -1,0 +1,44 @@
+# caelestia-lib-git — backing C++ library for Caelestia shell
+
+# Maintainer: senshu
+
+_pkgname='caelestia-lib'
+pkgname="$_pkgname-git"
+pkgver=0.1.0.r0
+pkgrel=1
+pkgdesc='The backing library for Caelestia (provides caelestia::caelestia cmake target)'
+arch=('x86_64' 'aarch64')
+url='https://github.com/caelestia-dots/lib'
+license=('GPL-3.0-only')
+depends=(
+    'qt6-base'
+    'qt6-declarative'
+    'glibc'
+    'gcc-libs'
+)
+makedepends=('git' 'cmake' 'ninja')
+provides=('caelestia-lib')
+conflicts=('caelestia-lib')
+source=("$pkgname::git+$url.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "${srcdir}/${pkgname}"
+    printf "0.1.0.r%s.g%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+build() {
+    cd "${srcdir}/${pkgname}"
+
+    cmake -B build -G Ninja \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DVERSION=0.1.0 \
+        -DBUILD_TESTING=OFF
+    cmake --build build
+}
+
+package() {
+    cd "${srcdir}/${pkgname}"
+    DESTDIR="$pkgdir" cmake --install build
+}

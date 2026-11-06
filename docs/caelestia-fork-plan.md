@@ -1,11 +1,20 @@
 # План: Форк Caelestia Shell
 
-## Текущее состояние (2026-11-06)
+## Текущее состояние (2026-11-06, сессия 2)
 
-**Форк уже создан** в `~/workspace/caelestia-shell`, ветка `custom/main`, 121 коммит поверх upstream.
+**Форк** в `~/workspace/caelestia-shell`, ветка `custom/main`.
 
-Remote `origin` = `https://github.com/caelestia-dots/shell.git` (upstream).
-GitHub-репо под своим аккаунтом **ещё не создан** — нужно создать и добавить как `senshu` remote.
+Remotes:
+- `origin` = `https://github.com/senshu-dev/caelestia-shell.git` (наш GitHub-репо, создан)
+- `upstream` = `https://github.com/caelestia-dots/shell.git`
+
+**Push заблокирован** — PAT не имеет `repo` scope. Нужно обновить токен или настроить SSH.
+
+### Зависимость: caelestia-dots/lib
+
+Форк зависит от **`caelestia-dots/lib`** — backing C++ библиотека, предоставляет cmake target `caelestia::caelestia` и заголовки `<caelestia/utils/cache.hpp>`, `<caelestia/scheme/scheme.hpp>` и т.д. В AUR пакета нет — PKGBUILD создан в `packages/caelestia-lib-git/`. Клонировано в `~/workspace/caelestia-lib`.
+
+**Порядок сборки:** caelestia-lib-git → caelestia-shell-custom.
 
 ### Что уже вмержено
 
@@ -26,14 +35,13 @@ GitHub-репо под своим аккаунтом **ещё не создан*
 
 ## Оставшиеся задачи
 
-### Задача 1: Создать GitHub-репо (5 мин)
+### Задача 1: GitHub-репо ✅ (частично)
+
+Репо создано: `senshu-dev/caelestia-shell`. Remotes настроены. **Push ожидает** исправления PAT/SSH.
 
 ```bash
+# После исправления auth:
 cd ~/workspace/caelestia-shell
-gh repo create senshu/caelestia-shell --private --source=. --push
-# потом переименовать remote:
-git remote rename origin upstream
-git remote add origin https://github.com/senshu/caelestia-shell.git
 git push -u origin custom/main
 ```
 
@@ -50,19 +58,23 @@ PR #2210 меняет `services/Wallpapers.qml`, но upstream перенёс л
 4. Обновить QML биндинги если нужно
 5. Собрать и протестировать
 
-### Задача 3: Установка форка на хост (30 мин)
+### Задача 3: Установка форка на хост (в процессе)
 
-**Вариант A (рекомендуемый для начала):** Overlay
+**Подход: свои PKGBUILD** (в `packages/`)
+
+1. Сначала собрать и установить `caelestia-lib-git`:
 ```bash
-# Симлинк форка поверх системного
-ln -sf ~/workspace/caelestia-shell ~/.local/share/quickshell/caelestia
-# или через XDG: файлы в ~/.config/quickshell/caelestia/ перезаписывают /etc/xdg/
+cd ~/workspace/dotfiles/packages/caelestia-lib-git
+makepkg -si
 ```
 
-**Вариант B (для стабильности позже):** Свой PKGBUILD
-- Скопировать `caelestia-shell-git` PKGBUILD
-- Заменить source URL на `senshu/caelestia-shell`
-- `makepkg -si`
+2. Затем собрать и установить `caelestia-shell-custom`:
+```bash
+cd ~/workspace/dotfiles/packages/caelestia-shell-custom
+makepkg -si
+```
+
+Форк собирается из `~/workspace/caelestia-shell` (custom/main).
 
 ### Задача 4: Обновить dotfiles (15 мин)
 
