@@ -1,0 +1,6 @@
+hl.on("hyprland.start", function ()
+    hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &")
+    hl.exec_cmd("/usr/lib/soteria-polkit/soteria")
+    hl.exec_cmd("caelestia shell -d")
+    hl.exec_cmd("caelestia scheme set -n dynamic")
+end)
