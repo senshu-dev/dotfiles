@@ -1,0 +1,30 @@
+{
+    "enabled": true,
+    "background": {
+        "wallpaperEnabled": true,
+        "desktopClock": {
+            "enabled": false
+        }
+    },
+    "bar": {
+        "enabled": false
+    },
+    "dashboard": {
+        "enabled": false
+    },
+    "osd": {
+        "enabled": false
+    },
+    "sidebar": {
+        "enabled": false
+    },
+    "utilities": {
+        "enabled": false
+    },
+    "notifications": {
+        "enabled": false
+    },
+    "launcher": {
+        "enabled": true
+    }
+}

@@ -36,6 +36,12 @@ setup_kitty() {
 setup_caelestia() {
     info "Linking Caelestia config..."
     link_config "$CONFIG_SRC/caelestia/shell.json" "$HOME/.config/caelestia/shell.json"
+    for mon_dir in "$CONFIG_SRC"/caelestia/monitors/*/; do
+        local mon_name
+        mon_name="$(basename "$mon_dir")"
+        mkdir -p "$HOME/.config/caelestia/monitors/$mon_name"
+        link_config "$mon_dir/shell.json" "$HOME/.config/caelestia/monitors/$mon_name/shell.json"
+    done
 }
 
 setup_all() {
