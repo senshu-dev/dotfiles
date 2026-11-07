@@ -73,11 +73,11 @@ hl.bind(main_mod .. " + equal",     hl.dsp.layout("colresize +0.1"))
 -- ================================ --
 --          WORKSPACES              --
 -- ================================ --
--- 4 workspaces per monitor, dynamically assigned by monitor index.
--- Monitor 0 gets workspaces 1-4, monitor 1 gets 5-8, etc.
--- SUPER+1..4 switches workspace on the focused monitor.
--- SUPER+ALT+1..4 moves the active window to that workspace on the focused monitor.
--- SUPER+Left/Right cycles through the focused monitor's 4 workspaces.
+-- 4 workspaces per monitor: DP gets 1-4, HDMI gets 5-8, etc.
+-- SUPER+1..4: switch to workspace on focused monitor (monitor-relative).
+-- SUPER+SHIFT+1..4: move window to that workspace.
+-- SUPER+Left/Right: cycle workspaces. SUPER+Up/Down: cycle monitors.
+-- SUPER+SHIFT+Up/Down: move window to next/prev monitor.
 
 local cycle_ws = "~/.config/hypr/scripts/cycle-workspace.sh"
 
@@ -86,9 +86,16 @@ hl.bind(main_mod .. " + left",  hl.dsp.exec_cmd(cycle_ws .. " -1"))
 hl.bind(main_mod .. " + up",    hl.dsp.focus({ monitor = "+1" }))
 hl.bind(main_mod .. " + down",  hl.dsp.focus({ monitor = "-1" }))
 
+-- SUPER+SHIFT+Up/Down: move active window to next/prev monitor
+hl.bind(main_mod .. " + SHIFT + up",   hl.dsp.window.move({ monitor = "+1" }))
+hl.bind(main_mod .. " + SHIFT + down", hl.dsp.window.move({ monitor = "-1" }))
+
 -- Bind workspaces to monitors: primary monitor gets 1-4, others get 5-8, 9-12, etc.
 -- Order: DP outputs first (typically the main display), then HDMI.
-local function bind_workspaces_to_monitors()
+-- monitor name → workspace base (0 for ws 1-4, 4 for ws 5-8, etc.)
+local monitor_ws_base = {}
+
+local function setup_workspaces()
     local monitors = hl.get_monitors()
     if not monitors then return end
 
@@ -101,6 +108,7 @@ local function bind_workspaces_to_monitors()
 
     for idx, mon in ipairs(monitors) do
         local base = (idx - 1) * 4
+        monitor_ws_base[mon.name] = base
         for ws = base + 1, base + 4 do
             hl.workspace_rule({
                 workspace = tostring(ws),
@@ -110,13 +118,26 @@ local function bind_workspaces_to_monitors()
         end
     end
 
-    -- Ensure each monitor's default workspace is on the correct monitor
     for idx, mon in ipairs(monitors) do
         local default_ws = tostring((idx - 1) * 4 + 1)
         hl.dispatch(hl.dsp.workspace.move({ workspace = default_ws, monitor = mon.name }))
     end
 end
-bind_workspaces_to_monitors()
+setup_workspaces()
+
+-- SUPER+1..4: switch to workspace N on the focused monitor
+-- SUPER+SHIFT+1..4: move active window to that workspace
+for i = 1, 4 do
+    hl.bind(main_mod .. " + " .. i, function()
+        local base = monitor_ws_base[hl.get_active_monitor().name] or 0
+        hl.dispatch(hl.dsp.focus({ workspace = tostring(base + i) }))
+    end)
+
+    hl.bind(main_mod .. " + SHIFT + " .. i, function()
+        local base = monitor_ws_base[hl.get_active_monitor().name] or 0
+        hl.dispatch(hl.dsp.window.move({ workspace = tostring(base + i) }))
+    end)
+end
 
 
 -- ================================ --
