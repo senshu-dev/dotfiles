@@ -133,6 +133,11 @@
             }
         ]
     },
+    "background": {
+        "workspaceWallpapers": {
+            "enabled": true
+        }
+    },
     "utilities": {},
     "session": {
         "commands": {

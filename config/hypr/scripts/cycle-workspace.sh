@@ -33,5 +33,5 @@ fi
 
 hyprctl eval "
 hl.dispatch(hl.dsp.focus({ monitor = \"$focused\" }))
-hl.dispatch(hl.dsp.focus({ workspace = $next }))
+hl.dispatch(hl.dsp.focus({ workspace = \"$next\" }))
 "

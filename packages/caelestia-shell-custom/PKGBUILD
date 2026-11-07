@@ -4,7 +4,7 @@
 
 _pkgname='caelestia-shell'
 pkgname="$_pkgname-custom"
-pkgver=2.5.0.r56
+pkgver=2.5.0.r187.g8c8a748f
 pkgrel=1
 pkgdesc='Custom fork of Caelestia shell with per-monitor notifications'
 arch=('x86_64' 'aarch64')
@@ -59,15 +59,16 @@ conflicts=($_pkgname "$_pkgname-git")
 build() {
     cd "$HOME/workspace/caelestia-shell"
 
-    cmake -B build -G Ninja \
+    cmake -B build-pkg -G Ninja \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DCMAKE_INSTALL_PREFIX=/usr
-    cmake --build build
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_SYSCONFDIR=/etc
+    cmake --build build-pkg
 }
 
 package() {
     cd "$HOME/workspace/caelestia-shell"
 
-    DESTDIR="$pkgdir" cmake --install build
+    DESTDIR="$pkgdir" cmake --install build-pkg
     install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$_pkgname/LICENSE
 }

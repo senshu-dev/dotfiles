@@ -64,3 +64,4 @@ github-cli
 
 # Apps
 discord
+steam

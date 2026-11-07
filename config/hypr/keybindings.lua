@@ -83,6 +83,8 @@ local cycle_ws = "~/.config/hypr/scripts/cycle-workspace.sh"
 
 hl.bind(main_mod .. " + right", hl.dsp.exec_cmd(cycle_ws .. " +1"))
 hl.bind(main_mod .. " + left",  hl.dsp.exec_cmd(cycle_ws .. " -1"))
+hl.bind(main_mod .. " + up",    hl.dsp.focus({ monitor = "+1" }))
+hl.bind(main_mod .. " + down",  hl.dsp.focus({ monitor = "-1" }))
 
 -- Bind workspaces to monitors: primary monitor gets 1-4, others get 5-8, 9-12, etc.
 -- Order: DP outputs first (typically the main display), then HDMI.
@@ -103,8 +105,15 @@ local function bind_workspaces_to_monitors()
             hl.workspace_rule({
                 workspace = tostring(ws),
                 monitor = mon.name,
+                default = (ws == base + 1),
             })
         end
+    end
+
+    -- Ensure each monitor's default workspace is on the correct monitor
+    for idx, mon in ipairs(monitors) do
+        local default_ws = tostring((idx - 1) * 4 + 1)
+        hl.dispatch(hl.dsp.workspace.move({ workspace = default_ws, monitor = mon.name }))
     end
 end
 bind_workspaces_to_monitors()
