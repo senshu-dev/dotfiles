@@ -110,6 +110,7 @@
         "weatherUnits": "Celsius"
     },
     "bar": {
+        "persistent": false,
         "entries": [
             {
                 "id": "logo",

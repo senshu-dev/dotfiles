@@ -50,6 +50,14 @@ btrfs-progs
 gvfs
 nautilus
 
+# Clipboard & Screenshots
+wl-clipboard
+cliphist
+swappy
+
+# Utilities
+brightnessctl
+
 # System
 zram-generator
 uwsm

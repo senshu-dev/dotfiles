@@ -145,6 +145,8 @@ end
 -- ================================ --
 hl.bind(main_mod .. " + p", hl.dsp.exec_cmd(programs.session))
 hl.bind(main_mod .. " + v", hl.dsp.exec_cmd("caelestia clipboard"))
+hl.bind(main_mod .. " + b", hl.dsp.exec_cmd("caelestia shell drawers toggle bar"))
+hl.bind(main_mod .. " + SHIFT + a", hl.dsp.exec_cmd("caelestia shell audio cycleOutput"))
 hl.bind(main_mod .. " + escape", hl.dsp.exec_cmd("hyprctl reload"))
 hl.bind("CTRL + ALT + l", hl.dsp.exec_cmd("caelestia shell lock lock"))
 
