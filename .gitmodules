@@ -1,0 +1,4 @@
+[submodule "packages/caelestia-shell"]
+	path = packages/caelestia-shell
+	url = github:senshu-dev/caelestia-shell.git
+	branch = custom/main
