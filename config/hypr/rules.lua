@@ -25,9 +25,9 @@ hl.layer_rule({
 })
 
 hl.window_rule({
-    name    = "kitty-opacity",
+    name    = "kitty-glass",
     match   = { class = "kitty" },
-    opacity = "1.0 override 1.0 override",
+    opacity = "0.85 0.65",
 })
 
 hl.window_rule({
