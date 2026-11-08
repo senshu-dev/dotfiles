@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Caelestia dotfiles setup. Links config files into ~/.config and sets up
+# Caelestia dotfiles setup. Copies config files into ~/.config and sets up
 # the shell environment.
 #
 #   ./setup.sh              run all components
@@ -26,8 +26,8 @@ ok()        { printf '%b[  ok  ]:%b %s\n'  "$GREEN"  "$NC" "$*"; }
 warn()      { printf '%b[ warn ]:%b %s\n'  "$YELLOW" "$NC" "$*" >&2; }
 error()     { printf '%b[  err ]:%b %s\n'  "$RED"    "$NC" "$*" >&2; }
 
-# Creates a symlink dst -> src, backing up any existing non-symlink file.
-link_config() {
+# Copies src to dst, backing up any existing file/directory.
+copy_config() {
     local src="$1" dst="$2"
     mkdir -p "$(dirname "$dst")"
     if [[ -L "$dst" ]]; then
@@ -37,36 +37,36 @@ link_config() {
         warn "$dst exists, backing up to $bak"
         mv "$dst" "$bak"
     fi
-    ln -sf "$src" "$dst"
-    ok "$dst -> $src"
+    cp -rp "$src" "$dst"
+    ok "Copied $src → $dst"
 }
 
 # ── Components ────────────────────────────────────────────────────────────────
 
 setup_hypr() {
-    info "Linking Hyprland config..."
-    link_config "$CONFIG_SRC/hypr" "$HOME/.config/hypr"
+    info "Copying Hyprland config..."
+    copy_config "$CONFIG_SRC/hypr" "$HOME/.config/hypr"
 }
 
 setup_kitty() {
-    info "Linking kitty config..."
-    link_config "$CONFIG_SRC/kitty" "$HOME/.config/kitty"
+    info "Copying kitty config..."
+    copy_config "$CONFIG_SRC/kitty" "$HOME/.config/kitty"
 }
 
 setup_caelestia() {
-    info "Linking Caelestia shell config..."
-    link_config "$CONFIG_SRC/caelestia/shell.json" "$HOME/.config/caelestia/shell.json"
+    info "Copying Caelestia shell config..."
+    copy_config "$CONFIG_SRC/caelestia/shell.json" "$HOME/.config/caelestia/shell.json"
     for mon_dir in "$CONFIG_SRC"/caelestia/monitors/*/; do
         local mon_name
         mon_name="$(basename "$mon_dir")"
         mkdir -p "$HOME/.config/caelestia/monitors/$mon_name"
-        link_config "$mon_dir/shell.json" "$HOME/.config/caelestia/monitors/$mon_name/shell.json"
+        copy_config "$mon_dir/shell.json" "$HOME/.config/caelestia/monitors/$mon_name/shell.json"
     done
 }
 
 setup_uwsm() {
-    info "Linking uwsm environment..."
-    link_config "$CONFIG_SRC/uwsm/env-hyprland" "$HOME/.config/uwsm/env-hyprland"
+    info "Copying uwsm environment..."
+    copy_config "$CONFIG_SRC/uwsm/env-hyprland" "$HOME/.config/uwsm/env-hyprland"
 }
 
 setup_zsh() {
@@ -79,7 +79,7 @@ setup_zsh() {
         warn "oh-my-zsh already installed, skipping"
     fi
 
-    link_config "$CONFIG_SRC/zsh/.zshrc" "$HOME/.zshrc"
+    copy_config "$CONFIG_SRC/zsh/.zshrc" "$HOME/.zshrc"
 
     if [[ "$SHELL" != "/usr/bin/zsh" ]]; then
         chsh -s /usr/bin/zsh
@@ -112,7 +112,7 @@ usage() {
     cat <<EOF
 Usage: $0 [component ...]
 
-Links dotfiles configs into ~/.config. With no arguments runs all components.
+Copies dotfiles configs into ~/.config. With no arguments runs all components.
 
 Components:
 EOF
@@ -133,7 +133,7 @@ main() {
             "$fn"
         done
         echo
-        ok "All components linked. Run 'hyprctl reload' to apply Hyprland changes."
+        ok "All components copied. Run 'hyprctl reload' to apply Hyprland changes."
         return
     fi
 

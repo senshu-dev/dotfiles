@@ -5,8 +5,8 @@ source "$ZSH/oh-my-zsh.sh"
 
 export EDITOR=nvim
 
-# Zoxide: z for fuzzy jump, zi for interactive
-eval "$(zoxide init zsh)"
+# Zoxide: cd = smart jump, cdi = interactive
+eval "$(zoxide init --cmd cd zsh)"
 
 # FZF key bindings and completions
 source <(fzf --zsh)
