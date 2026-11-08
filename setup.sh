@@ -1,14 +1,32 @@
 #!/usr/bin/env bash
+#
+# Caelestia dotfiles setup. Links config files into ~/.config and sets up
+# the shell environment.
+#
+#   ./setup.sh              run all components
+#   ./setup.sh hypr zsh     run only these components
+#   ./setup.sh --list       list component names
+#   ./setup.sh --help       show this help
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_SRC="$SCRIPT_DIR/config"
 
-info()      { printf '\033[1;34m[INFO]\033[0m %s\n' "$*"; }
-success()   { printf '\033[1;32m[OK]\033[0m   %s\n' "$*"; }
-warn()      { printf '\033[1;33m[WARN]\033[0m %s\n' "$*"; }
-error()     { printf '\033[1;31m[ERR]\033[0m  %s\n' "$*" >&2; }
+# Terminal-aware colors: suppressed when output is piped or redirected.
+if [[ -t 1 ]]; then
+    CYAN=$'\033[0;36m' GREEN=$'\033[0;32m' YELLOW=$'\033[0;33m' RED=$'\033[0;31m' NC=$'\033[0m'
+else
+    CYAN='' GREEN='' YELLOW='' RED='' NC=''
+fi
 
+highlight() { printf '%b%s%b\n'    "$CYAN"   "$*" "$NC"; }
+info()      { printf '%b[ info ]:%b %s\n'  "$CYAN"   "$NC" "$*"; }
+ok()        { printf '%b[  ok  ]:%b %s\n'  "$GREEN"  "$NC" "$*"; }
+warn()      { printf '%b[ warn ]:%b %s\n'  "$YELLOW" "$NC" "$*" >&2; }
+error()     { printf '%b[  err ]:%b %s\n'  "$RED"    "$NC" "$*" >&2; }
+
+# Creates a symlink dst -> src, backing up any existing non-symlink file.
 link_config() {
     local src="$1" dst="$2"
     mkdir -p "$(dirname "$dst")"
@@ -20,8 +38,10 @@ link_config() {
         mv "$dst" "$bak"
     fi
     ln -sf "$src" "$dst"
-    success "$dst -> $src"
+    ok "$dst -> $src"
 }
+
+# ── Components ────────────────────────────────────────────────────────────────
 
 setup_hypr() {
     info "Linking Hyprland config..."
@@ -34,7 +54,7 @@ setup_kitty() {
 }
 
 setup_caelestia() {
-    info "Linking Caelestia config..."
+    info "Linking Caelestia shell config..."
     link_config "$CONFIG_SRC/caelestia/shell.json" "$HOME/.config/caelestia/shell.json"
     for mon_dir in "$CONFIG_SRC"/caelestia/monitors/*/; do
         local mon_name
@@ -63,47 +83,74 @@ setup_zsh() {
 
     if [[ "$SHELL" != "/usr/bin/zsh" ]]; then
         chsh -s /usr/bin/zsh
-        success "Default shell set to zsh (re-login to apply)"
+        ok "Default shell set to zsh (re-login to apply)"
     fi
 }
 
-setup_all() {
-    setup_hypr
-    setup_kitty
-    setup_caelestia
-    setup_uwsm
-    setup_zsh
-    echo
-    success "All configs linked. Run 'hyprctl reload' to apply Hyprland changes."
+# ── Dispatch ──────────────────────────────────────────────────────────────────
+
+# Single source of truth: "name|function|description"
+COMPONENTS=(
+    "hypr|setup_hypr|Hyprland config"
+    "kitty|setup_kitty|kitty terminal config"
+    "caelestia|setup_caelestia|Caelestia shell config + per-monitor overrides"
+    "uwsm|setup_uwsm|uwsm environment (aquamarine workarounds)"
+    "zsh|setup_zsh|zsh config + oh-my-zsh"
+)
+
+component_fn() {
+    local entry name fn
+    for entry in "${COMPONENTS[@]}"; do
+        IFS='|' read -r name fn _ <<<"$entry"
+        [[ "$name" == "$1" ]] && { printf '%s\n' "$fn"; return 0; }
+    done
+    return 1
 }
 
 usage() {
+    local entry name desc
     cat <<EOF
-Usage: $0 [component...]
+Usage: $0 [component ...]
+
+Links dotfiles configs into ~/.config. With no arguments runs all components.
 
 Components:
-  hypr        Hyprland config
-  kitty       kitty terminal config
-  caelestia   Caelestia shell config
-  uwsm        uwsm environment (aquamarine workarounds)
-  zsh         zsh config + oh-my-zsh
-With no arguments, links all configs.
 EOF
+    for entry in "${COMPONENTS[@]}"; do
+        IFS='|' read -r name _ desc <<<"$entry"
+        printf '  %-12s %s\n' "$name" "$desc"
+    done
+    printf '\nFlags: --list  print component names one per line\n'
 }
 
-if [[ $# -eq 0 ]]; then
-    setup_all
-    exit 0
-fi
+main() {
+    local entry name fn arg
 
-for arg in "$@"; do
-    case "$arg" in
-        hypr)       setup_hypr ;;
-        kitty)      setup_kitty ;;
-        caelestia)  setup_caelestia ;;
-        uwsm)       setup_uwsm ;;
-        zsh)        setup_zsh ;;
-        --help|-h)  usage; exit 0 ;;
-        *)          error "Unknown component: $arg"; usage; exit 1 ;;
-    esac
-done
+    if [[ $# -eq 0 ]]; then
+        highlight "Caelestia dotfiles setup"
+        for entry in "${COMPONENTS[@]}"; do
+            IFS='|' read -r name fn _ <<<"$entry"
+            "$fn"
+        done
+        echo
+        ok "All components linked. Run 'hyprctl reload' to apply Hyprland changes."
+        return
+    fi
+
+    for arg in "$@"; do
+        case "$arg" in
+            --help|-h) usage; return ;;
+            --list)    printf '%s\n' "${COMPONENTS[@]%%|*}" ;;
+            *)
+                if ! fn="$(component_fn "$arg")"; then
+                    error "Unknown component: $arg"
+                    usage
+                    exit 1
+                fi
+                "$fn"
+                ;;
+        esac
+    done
+}
+
+main "$@"
