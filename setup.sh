@@ -49,11 +49,30 @@ setup_uwsm() {
     link_config "$CONFIG_SRC/uwsm/env-hyprland" "$HOME/.config/uwsm/env-hyprland"
 }
 
+setup_zsh() {
+    info "Setting up zsh..."
+
+    if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+        info "Installing oh-my-zsh..."
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    else
+        warn "oh-my-zsh already installed, skipping"
+    fi
+
+    link_config "$CONFIG_SRC/zsh/.zshrc" "$HOME/.zshrc"
+
+    if [[ "$SHELL" != "/usr/bin/zsh" ]]; then
+        chsh -s /usr/bin/zsh
+        success "Default shell set to zsh (re-login to apply)"
+    fi
+}
+
 setup_all() {
     setup_hypr
     setup_kitty
     setup_caelestia
     setup_uwsm
+    setup_zsh
     echo
     success "All configs linked. Run 'hyprctl reload' to apply Hyprland changes."
 }
@@ -67,7 +86,7 @@ Components:
   kitty       kitty terminal config
   caelestia   Caelestia shell config
   uwsm        uwsm environment (aquamarine workarounds)
-
+  zsh         zsh config + oh-my-zsh
 With no arguments, links all configs.
 EOF
 }
@@ -83,6 +102,7 @@ for arg in "$@"; do
         kitty)      setup_kitty ;;
         caelestia)  setup_caelestia ;;
         uwsm)       setup_uwsm ;;
+        zsh)        setup_zsh ;;
         --help|-h)  usage; exit 0 ;;
         *)          error "Unknown component: $arg"; usage; exit 1 ;;
     esac

@@ -27,6 +27,7 @@ lib32-vulkan-icd-loader
 # Wayland / Display
 wayland
 xorg-xwayland
+xorg-xrandr
 qt5-wayland
 qt6-wayland
 glfw
@@ -44,6 +45,11 @@ pipewire
 pipewire-alsa
 pipewire-pulse
 wireplumber
+playerctl
+
+# Bluetooth
+bluez
+bluez-utils
 
 # Filesystem
 btrfs-progs
@@ -57,6 +63,9 @@ swappy
 
 # Utilities
 brightnessctl
+jq
+fzf
+zoxide
 
 # System
 zram-generator
@@ -69,6 +78,9 @@ ffmpeg4.4
 git
 neovim
 github-cli
+
+# Containers
+podman
 
 # Apps
 discord
