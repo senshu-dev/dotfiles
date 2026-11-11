@@ -144,7 +144,7 @@ end
 --          SYSTEM / UI             --
 -- ================================ --
 hl.bind(main_mod .. " + p", hl.dsp.exec_cmd(programs.session))
-hl.bind(main_mod .. " + v", hl.dsp.exec_cmd("caelestia clipboard"))
+-- clipboard moved to plugins.lua
 hl.bind(main_mod .. " + b", hl.dsp.exec_cmd("caelestia shell drawers toggle bar"))
 hl.bind(main_mod .. " + SHIFT + a", hl.dsp.exec_cmd("caelestia shell audio cycleOutput"))
 hl.bind(main_mod .. " + escape", hl.dsp.exec_cmd("hyprctl reload"))

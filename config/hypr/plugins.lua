@@ -67,6 +67,9 @@ hl.config({
 -- scrolloverview
 hl.bind("SUPER + tab", function() hl.plugin.scrolloverview.overview("toggle all") end)
 
+-- clipboard drawer
+hl.bind("SUPER + v", hl.dsp.exec_cmd("qs -c caelestia ipc call drawers toggle clipboard"))
+
 -- hyprglass
 if hl.plugin.hyprglass then
     local hg = hl.plugin.hyprglass
