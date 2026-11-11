@@ -11,8 +11,8 @@ hl.config({
         rounding       = 28,
         rounding_power = 2,
 
-        active_opacity   = 0.95,
-        inactive_opacity = 0.65,
+        active_opacity   = 0.85,
+        inactive_opacity = 0.55,
 
         shadow = {
             enabled         = true,
@@ -87,3 +87,4 @@ hl.animation({
     speed = 1.0,
     bezier = "default",
 })
+

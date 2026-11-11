@@ -8,5 +8,6 @@ hl.on("hyprland.start", function ()
     -- see HDMI-A-2 (75Hz) as monitor 0 and DXVK caps at 75fps on DP-6 fullscreen.
     hl.exec_cmd("bash -c 'sleep 1 && xrandr --output DP-6 --primary' &")
     -- NVIDIA + DP timing fix: re-apply monitor config after GPU fully initializes
+    hl.exec_cmd("hyprpm reload -n")
     hl.exec_cmd("bash -c 'sleep 2 && hyprctl reload' &")
 end)

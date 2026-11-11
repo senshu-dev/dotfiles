@@ -3,6 +3,7 @@ require('autostart')
 require('visual_effects')
 require('rules')
 require('keybindings')
+require('plugins')
 
 hl.config({
     ecosystem = {
